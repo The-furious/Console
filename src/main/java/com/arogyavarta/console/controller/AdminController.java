@@ -19,11 +19,11 @@ import java.util.List;
 @RestController
 @RequestMapping("/admin")
 public class AdminController {
-    @GetMapping("/sayHello")
-    @PermitAll
-    public String sayHello(){
-        return "Hello World!";
-    }
+//    @GetMapping("/sayHello")
+//    @PermitAll
+//    public String sayHello(){
+//        return "Hello World!";
+//    }
     @Autowired
     private RoleService roleService;
     @Autowired
@@ -36,12 +36,12 @@ public class AdminController {
         if(newUser.getUserName()==null) return new ResponseEntity<>(user, HttpStatus.CONFLICT);
         return new ResponseEntity<>(newUser, HttpStatus.OK);
     }
-    @PostMapping("/admin/signup")
-    public ResponseEntity<User> adminSignUp(@RequestBody User user){
-        User newUser = adminService.adminSignUp(user);
-        if(newUser.getUserName()==null) return new ResponseEntity<>(user, HttpStatus.CONFLICT);
-        return new ResponseEntity<>(newUser, HttpStatus.OK);
-    }
+//    @PostMapping("/admin/signup")
+//    public ResponseEntity<User> adminSignUp(@RequestBody User user){
+//        User newUser = adminService.adminSignUp(user);
+//        if(newUser.getUserName()==null) return new ResponseEntity<>(user, HttpStatus.CONFLICT);
+//        return new ResponseEntity<>(newUser, HttpStatus.OK);
+//    }
     @PostMapping("/radiologist/signup")
     public ResponseEntity<User> radiologistSignUp(@RequestBody User user){
         User newUser = adminService.radiologistSignUp(user);
@@ -55,16 +55,16 @@ public class AdminController {
         return new ResponseEntity<>(newUser, HttpStatus.OK);
     }
 
-    @PostMapping("/createNewRole")
-    public ResponseEntity<Role>  createNewRole(@RequestBody Role role){
-        Role newRole=roleService.createNewRole(role);
-        return new ResponseEntity<>(newRole, HttpStatus.OK);
-    }
+//    @PostMapping("/createNewRole")
+//    public ResponseEntity<Role>  createNewRole(@RequestBody Role role){
+//        Role newRole=roleService.createNewRole(role);
+//        return new ResponseEntity<>(newRole, HttpStatus.OK);
+//    }
 //    @PreAuthorize("hasAuthority('admin')")
-    @GetMapping("/getAllRoles")
-    public ResponseEntity<List<Role>> getAllRoles(){
-        return new ResponseEntity<>(roleService.getALLRoles(),HttpStatus.OK);
-    }
+//    @GetMapping("/getAllRoles")
+//    public ResponseEntity<List<Role>> getAllRoles(){
+//        return new ResponseEntity<>(roleService.getALLRoles(),HttpStatus.OK);
+//    }
     @GetMapping("/getAllUser")
     public ResponseEntity<List<User>> getAllUser(){
         return new ResponseEntity<>(adminService.getAllUser(),HttpStatus.OK);
