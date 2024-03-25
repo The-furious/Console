@@ -1,6 +1,6 @@
 package com.arogyavarta.console.service;
 
-import com.arogyavarta.console.DTO.AuthBodyDTO;
+import com.arogyavarta.console.DTO.LoginReqDTO;
 import com.arogyavarta.console.config.CustomUserDetails;
 import com.arogyavarta.console.entity.UserLogin;
 import com.arogyavarta.console.repo.UserRepo;

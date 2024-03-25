@@ -1,34 +1,45 @@
 package com.arogyavarta.console.service;
 
-import com.arogyavarta.console.DTO.AuthBodyDTO;
-import com.arogyavarta.console.entity.Role;
-import com.arogyavarta.console.entity.UserLogin;
-import com.arogyavarta.console.repo.UserRepo;
-import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Component;
 
-import java.util.*;
+import com.arogyavarta.console.DTO.LoginReqDTO;
+import com.arogyavarta.console.DTO.LoginRes;
+import com.arogyavarta.console.entity.Credentials;
+import com.arogyavarta.console.repo.CredentialsRepository;
+import com.arogyavarta.console.utils.JWTUtils;
 
 @Component
-@Slf4j
 public class LoginService {
+
     @Autowired
-    private  UserRepo userRepository;
-    private static final Logger logger = LoggerFactory.getLogger(UserDetailsServiceImpl.class);
-    public  Boolean isSameRole(AuthBodyDTO authBodyDTO){
-        Optional<UserLogin> userO= userRepository.findById(authBodyDTO.getUsername());
-        if(userO.isEmpty()){
-            return false;
-        }
-        Set<Role> userRoles = userO.get().getRole();
-        for (Role role : userRoles) {
-            if (role.getRoleName().equals(authBodyDTO.getRole())) {
-                return true;
+    private CredentialsRepository credentialsRepo;
+    @Autowired
+    private JWTUtils jwtUtils;
+    @Autowired
+    private AuthenticationManager authenticationManager;
+    public LoginRes logIn(LoginReqDTO signinRequest){
+        LoginRes response = new LoginRes();
+
+        try {
+            Credentials user = credentialsRepo.findByUsername(signinRequest.getUsername()).orElseThrow();
+            System.out.println("USER IS: "+ user);
+            if( user.getUserType().toString().equals(signinRequest.getUserType())==false)
+            {
+                throw new Exception("Role mismatch");
             }
+            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(signinRequest.getUsername(),signinRequest.getPassword()));
+            var jwt = jwtUtils.generateToken(user);
+            response.setStatusCode(200);
+            response.setToken(jwt);
+            response.setUserId(user.getUser().getUserId());
+            response.setMessage("Successfully Signed In");
+        }catch (Exception e){
+            response.setStatusCode(500);
+            response.setError(e.getMessage());
         }
-        return false;
+        return response;
     }
 }

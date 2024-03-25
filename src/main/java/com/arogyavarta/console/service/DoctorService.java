@@ -1,6 +1,7 @@
 package com.arogyavarta.console.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.arogyavarta.console.DTO.DoctorDTO;
@@ -21,6 +22,9 @@ public class DoctorService {
     @Autowired
     private CredentialsRepository credentialsRepository;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     @Transactional
     public void createDoctor(DoctorDTO doctorDTO) {
         Doctor doctor = new Doctor();
@@ -36,7 +40,7 @@ public class DoctorService {
         Credentials credentials = Credentials.builder()
                 .user(doctor)
                 .username(doctorDTO.getUsername())
-                .password(doctorDTO.getPassword())
+                .password(passwordEncoder.encode(doctorDTO.getPassword()))
                 .userType(UserType.DOCTOR)
                 .build();
         credentialsRepository.save(credentials);

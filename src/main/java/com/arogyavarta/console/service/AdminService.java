@@ -30,13 +30,15 @@ public class AdminService {
     private UserRepo userRepo;
     @Autowired
     private RoleRepo roleRepo;
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+
     @Autowired
     private AdminRepository adminRepository;
 
     @Autowired
     private CredentialsRepository credentialsRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Transactional
     public void createAdmin(AdminDTO adminDTO) {
@@ -53,7 +55,7 @@ public class AdminService {
         Credentials credentials = Credentials.builder()
                 .user(admin)
                 .username(adminDTO.getUsername())
-                .password(adminDTO.getPassword())
+                .password(passwordEncoder.encode(adminDTO.getPassword()))
                 .userType(UserType.ADMIN)
                 .build();
         credentialsRepository.save(credentials);

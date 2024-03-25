@@ -2,8 +2,6 @@ package com.arogyavarta.console.controller;
 
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,27 +18,20 @@ import com.arogyavarta.console.entity.UserLogin;
 import com.arogyavarta.console.service.AdminService;
 import com.arogyavarta.console.service.DoctorService;
 import com.arogyavarta.console.service.LabService;
-import com.arogyavarta.console.service.RoleService;
-import com.arogyavarta.console.service.UserDetailsServiceImpl;
 
 @RestController
 @RequestMapping("/admin")
 public class AdminController {
-//    @GetMapping("/sayHello")
-//    @PermitAll
-//    public String sayHello(){
-//        return "Hello World!";
-//    }
-    @Autowired
-    private RoleService roleService;
+   @GetMapping("/sayHello")
+   public String sayHello(){
+       return "Hello World!";
+   }
     @Autowired
     private AdminService adminService;
     @Autowired
     private DoctorService doctorService;
     @Autowired
     private LabService labService;
-    private static final Logger logger = LoggerFactory.getLogger(UserDetailsServiceImpl.class);
-//    @PreAuthorize("hasRole('admin')")
     @PostMapping("/doctor/signup")
     public ResponseEntity<UserLogin> doctorSignUp(@RequestBody UserLogin user){
         UserLogin newUser = adminService.doctorSignUp(user);
