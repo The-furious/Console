@@ -28,6 +28,6 @@ public class User {
     private String name;
     private String email;
     private String profilePhotoUrl;
-    private int contactNumber;
+    private String contactNumber;
     private String address;
 }

@@ -1,6 +1,5 @@
 package com.arogyavarta.console.config;
 
-import com.arogyavarta.console.service.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,6 +16,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+import com.arogyavarta.console.service.UserDetailsServiceImpl;
 
 @Configuration
 @EnableWebSecurity
@@ -35,7 +36,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http.csrf().disable()
                 .authorizeHttpRequests()
-                .requestMatchers("/admin/sayHello","/patient/signup","/admin/admin/signup","/swagger-ui/index.html","/auth/login","/swagger-ui.html", "/v2/api-docs", "/configuration/ui","/swagger-resources/**", "/configuration/security").permitAll()
+                .requestMatchers("**","/admin/sayHello","/patient/signup","/admin/admin/signup","/swagger-ui/index.html","/auth/login","/swagger-ui.html", "/v2/api-docs", "/configuration/ui","/swagger-resources/**", "/configuration/security").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .sessionManagement()

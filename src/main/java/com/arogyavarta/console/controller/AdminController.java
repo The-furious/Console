@@ -1,20 +1,27 @@
 package com.arogyavarta.console.controller;
 
-import com.arogyavarta.console.entity.Role;
-import com.arogyavarta.console.entity.UserLogin;
-import com.arogyavarta.console.service.RoleService;
-import com.arogyavarta.console.service.AdminService;
-import com.arogyavarta.console.service.UserDetailsServiceImpl;
-import jakarta.annotation.security.PermitAll;
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
+import com.arogyavarta.console.DTO.AdminDTO;
+import com.arogyavarta.console.DTO.DoctorDTO;
+import com.arogyavarta.console.DTO.LabDTO;
+import com.arogyavarta.console.entity.UserLogin;
+import com.arogyavarta.console.service.AdminService;
+import com.arogyavarta.console.service.DoctorService;
+import com.arogyavarta.console.service.LabService;
+import com.arogyavarta.console.service.RoleService;
+import com.arogyavarta.console.service.UserDetailsServiceImpl;
 
 @RestController
 @RequestMapping("/admin")
@@ -28,6 +35,10 @@ public class AdminController {
     private RoleService roleService;
     @Autowired
     private AdminService adminService;
+    @Autowired
+    private DoctorService doctorService;
+    @Autowired
+    private LabService labService;
     private static final Logger logger = LoggerFactory.getLogger(UserDetailsServiceImpl.class);
 //    @PreAuthorize("hasRole('admin')")
     @PostMapping("/doctor/signup")
@@ -84,6 +95,23 @@ public class AdminController {
     @GetMapping("/getAllLab")
     public ResponseEntity<List<UserLogin>> getAllLab(){
         return new ResponseEntity<>(adminService.getAllLab(),HttpStatus.OK);
+    }
+
+    @PostMapping("/createAdmin")
+    public ResponseEntity<String> createAdmin(@RequestBody AdminDTO adminDTO) {
+        adminService.createAdmin(adminDTO);
+        return ResponseEntity.ok("Admin created successfully");
+    }
+    @PostMapping("/createDoctor")
+    public ResponseEntity<String> createDoctor(@RequestBody DoctorDTO doctorDTO) {
+        doctorService.createDoctor(doctorDTO);
+        return ResponseEntity.ok("Doctor created successfully");
+    }
+
+    @PostMapping("/createLab")
+    public ResponseEntity<String> createLab(@RequestBody LabDTO labDTO) {
+        labService.createLab(labDTO);
+        return ResponseEntity.ok("Lab created successfully");
     }
 
 }

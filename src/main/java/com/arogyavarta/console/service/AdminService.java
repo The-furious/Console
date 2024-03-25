@@ -1,18 +1,28 @@
 package com.arogyavarta.console.service;
 
-import com.arogyavarta.console.entity.Role;
-import com.arogyavarta.console.entity.UserLogin;
-import com.arogyavarta.console.repo.RoleRepo;
-import com.arogyavarta.console.repo.UserRepo;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+
 import org.springframework.beans.factory.annotation.Autowired;
 //import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import com.arogyavarta.console.DTO.AdminDTO;
+import com.arogyavarta.console.entity.Admin;
+import com.arogyavarta.console.entity.Credentials;
+import com.arogyavarta.console.entity.Role;
+import com.arogyavarta.console.entity.UserLogin;
+import com.arogyavarta.console.entity.UserType;
+import com.arogyavarta.console.repo.AdminRepository;
+import com.arogyavarta.console.repo.CredentialsRepository;
+import com.arogyavarta.console.repo.RoleRepo;
+import com.arogyavarta.console.repo.UserRepo;
+
+import jakarta.transaction.Transactional;
 
 @Service
 public class AdminService {
@@ -22,6 +32,32 @@ public class AdminService {
     private RoleRepo roleRepo;
     @Autowired
     private PasswordEncoder passwordEncoder;
+    @Autowired
+    private AdminRepository adminRepository;
+
+    @Autowired
+    private CredentialsRepository credentialsRepository;
+
+    @Transactional
+    public void createAdmin(AdminDTO adminDTO) {
+        Admin admin = new Admin();
+        admin.setName(adminDTO.getName());
+        admin.setEmail(adminDTO.getEmail());
+        admin.setProfilePhotoUrl(adminDTO.getProfilePhotoUrl());
+        admin.setContactNumber(adminDTO.getContactNumber());
+        admin.setAddress(adminDTO.getAddress());
+        admin.setJoinDate(new Date()); 
+
+        adminRepository.save(admin);
+
+        Credentials credentials = Credentials.builder()
+                .user(admin)
+                .username(adminDTO.getUsername())
+                .password(adminDTO.getPassword())
+                .userType(UserType.ADMIN)
+                .build();
+        credentialsRepository.save(credentials);
+    }
     public UserLogin doctorSignUp(UserLogin user){
         Optional<UserLogin> newUser=userRepo.findById(user.getUserName());
         if(newUser.isPresent()){
