@@ -2,7 +2,7 @@ package com.arogyavarta.console.service;
 
 import com.arogyavarta.console.DTO.AuthBodyDTO;
 import com.arogyavarta.console.config.CustomUserDetails;
-import com.arogyavarta.console.entity.User;
+import com.arogyavarta.console.entity.UserLogin;
 import com.arogyavarta.console.repo.UserRepo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,9 +26,9 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
         logger.info("Entering in loadUserByUsername Method...");
-        Optional<User> optionalUser = userRepository.findById(username);
+        Optional<UserLogin> optionalUser = userRepository.findById(username);
         logger.info("Optional User: "+optionalUser+" "+optionalUser.get().getRole());
-        User user=optionalUser.orElse(null);
+        UserLogin user=optionalUser.orElse(null);
         if(user == null){
             logger.error("Username not found: " + username);
             throw new UsernameNotFoundException("could not found user..!!");

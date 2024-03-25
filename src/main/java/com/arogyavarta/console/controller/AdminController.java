@@ -1,7 +1,7 @@
 package com.arogyavarta.console.controller;
 
 import com.arogyavarta.console.entity.Role;
-import com.arogyavarta.console.entity.User;
+import com.arogyavarta.console.entity.UserLogin;
 import com.arogyavarta.console.service.RoleService;
 import com.arogyavarta.console.service.AdminService;
 import com.arogyavarta.console.service.UserDetailsServiceImpl;
@@ -31,8 +31,8 @@ public class AdminController {
     private static final Logger logger = LoggerFactory.getLogger(UserDetailsServiceImpl.class);
 //    @PreAuthorize("hasRole('admin')")
     @PostMapping("/doctor/signup")
-    public ResponseEntity<User> doctorSignUp(@RequestBody User user){
-        User newUser = adminService.doctorSignUp(user);
+    public ResponseEntity<UserLogin> doctorSignUp(@RequestBody UserLogin user){
+        UserLogin newUser = adminService.doctorSignUp(user);
         if(newUser.getUserName()==null) return new ResponseEntity<>(user, HttpStatus.CONFLICT);
         return new ResponseEntity<>(newUser, HttpStatus.OK);
     }
@@ -43,14 +43,14 @@ public class AdminController {
 //        return new ResponseEntity<>(newUser, HttpStatus.OK);
 //    }
     @PostMapping("/radiologist/signup")
-    public ResponseEntity<User> radiologistSignUp(@RequestBody User user){
-        User newUser = adminService.radiologistSignUp(user);
+    public ResponseEntity<UserLogin> radiologistSignUp(@RequestBody UserLogin user){
+        UserLogin newUser = adminService.radiologistSignUp(user);
         if(newUser.getUserName()==null) return new ResponseEntity<>(user, HttpStatus.CONFLICT);
         return new ResponseEntity<>(newUser, HttpStatus.OK);
     }
     @PostMapping("/lab/signup")
-    public ResponseEntity<User> labSignUp(@RequestBody User user){
-        User newUser = adminService.labSignUp(user);
+    public ResponseEntity<UserLogin> labSignUp(@RequestBody UserLogin user){
+        UserLogin newUser = adminService.labSignUp(user);
         if(newUser.getUserName()==null) return new ResponseEntity<>(user, HttpStatus.CONFLICT);
         return new ResponseEntity<>(newUser, HttpStatus.OK);
     }
@@ -66,23 +66,23 @@ public class AdminController {
 //        return new ResponseEntity<>(roleService.getALLRoles(),HttpStatus.OK);
 //    }
     @GetMapping("/getAllUser")
-    public ResponseEntity<List<User>> getAllUser(){
+    public ResponseEntity<List<UserLogin>> getAllUser(){
         return new ResponseEntity<>(adminService.getAllUser(),HttpStatus.OK);
     }
     @GetMapping("/getAllPatient")
-    public ResponseEntity<List<User>> getAllPatient(){
+    public ResponseEntity<List<UserLogin>> getAllPatient(){
         return new ResponseEntity<>(adminService.getAllPatient(),HttpStatus.OK);
     }
     @GetMapping("/getAllDoctor")
-    public ResponseEntity<List<User>> getAllDoctor(){
+    public ResponseEntity<List<UserLogin>> getAllDoctor(){
         return new ResponseEntity<>(adminService.getAllDoctor(),HttpStatus.OK);
     }
     @GetMapping("/getAllRadiologist")
-    public ResponseEntity<List<User>> getAllRadiologist(){
+    public ResponseEntity<List<UserLogin>> getAllRadiologist(){
         return new ResponseEntity<>(adminService.getAllRadiologist(),HttpStatus.OK);
     }
     @GetMapping("/getAllLab")
-    public ResponseEntity<List<User>> getAllLab(){
+    public ResponseEntity<List<UserLogin>> getAllLab(){
         return new ResponseEntity<>(adminService.getAllLab(),HttpStatus.OK);
     }
 

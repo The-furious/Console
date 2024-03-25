@@ -2,7 +2,7 @@ package com.arogyavarta.console.service;
 
 import com.arogyavarta.console.DTO.AuthBodyDTO;
 import com.arogyavarta.console.entity.Role;
-import com.arogyavarta.console.entity.User;
+import com.arogyavarta.console.entity.UserLogin;
 import com.arogyavarta.console.repo.UserRepo;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
@@ -19,7 +19,7 @@ public class LoginService {
     private  UserRepo userRepository;
     private static final Logger logger = LoggerFactory.getLogger(UserDetailsServiceImpl.class);
     public  Boolean isSameRole(AuthBodyDTO authBodyDTO){
-        Optional<User> userO= userRepository.findById(authBodyDTO.getUsername());
+        Optional<UserLogin> userO= userRepository.findById(authBodyDTO.getUsername());
         if(userO.isEmpty()){
             return false;
         }

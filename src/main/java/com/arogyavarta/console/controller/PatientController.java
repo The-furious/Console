@@ -1,6 +1,6 @@
 package com.arogyavarta.console.controller;
 
-import com.arogyavarta.console.entity.User;
+import com.arogyavarta.console.entity.UserLogin;
 import com.arogyavarta.console.service.PatientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,7 +14,7 @@ public class PatientController {
     @Autowired
     private PatientService patientService;
     @PostMapping("/signup")
-    public User signUp(@RequestBody User user){
+    public UserLogin signUp(@RequestBody UserLogin user){
         return patientService.patientSignup(user);
     }
 }

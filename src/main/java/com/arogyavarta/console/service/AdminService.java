@@ -1,7 +1,7 @@
 package com.arogyavarta.console.service;
 
 import com.arogyavarta.console.entity.Role;
-import com.arogyavarta.console.entity.User;
+import com.arogyavarta.console.entity.UserLogin;
 import com.arogyavarta.console.repo.RoleRepo;
 import com.arogyavarta.console.repo.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,10 +22,10 @@ public class AdminService {
     private RoleRepo roleRepo;
     @Autowired
     private PasswordEncoder passwordEncoder;
-    public User doctorSignUp(User user){
-        Optional<User> newUser=userRepo.findById(user.getUserName());
+    public UserLogin doctorSignUp(UserLogin user){
+        Optional<UserLogin> newUser=userRepo.findById(user.getUserName());
         if(newUser.isPresent()){
-            return new User();
+            return new UserLogin();
         }
         Role doctorRole = roleRepo.findById("doctor")
                 .orElseThrow(() -> new RuntimeException("Role not found with name: doctor"));
@@ -35,10 +35,10 @@ public class AdminService {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepo.save(user);
     }
-    public User adminSignUp(User user){
-        Optional<User> newUser=userRepo.findById(user.getUserName());
+    public UserLogin adminSignUp(UserLogin user){
+        Optional<UserLogin> newUser=userRepo.findById(user.getUserName());
         if(newUser.isPresent()){
-            return new User();
+            return new UserLogin();
         }
         Role adminRole = roleRepo.findById("admin")
                 .orElseThrow(() -> new RuntimeException("Role not found with name: admin"));
@@ -48,10 +48,10 @@ public class AdminService {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepo.save(user);
     }
-    public User radiologistSignUp(User user){
-        Optional<User> newUser=userRepo.findById(user.getUserName());
+    public UserLogin radiologistSignUp(UserLogin user){
+        Optional<UserLogin> newUser=userRepo.findById(user.getUserName());
         if(newUser.isPresent()){
-            return new User();
+            return new UserLogin();
         }
         Role radiologistRole = roleRepo.findById("radiologist")
                 .orElseThrow(() -> new RuntimeException("Role not found with name: radiologist"));
@@ -61,10 +61,10 @@ public class AdminService {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepo.save(user);
     }
-    public User labSignUp(User user){
-        Optional<User> newUser=userRepo.findById(user.getUserName());
+    public UserLogin labSignUp(UserLogin user){
+        Optional<UserLogin> newUser=userRepo.findById(user.getUserName());
         if(newUser.isPresent()){
-            return new User();
+            return new UserLogin();
         }
         Role labRole = roleRepo.findById("lab_technician")
                 .orElseThrow(() -> new RuntimeException("Role not found with name: lab_technician"));
@@ -73,19 +73,19 @@ public class AdminService {
         user.setRole(roles);
         return userRepo.save(user);
     }
-    public List<User> getAllUser(){
+    public List<UserLogin> getAllUser(){
         return userRepo.findAll();
     }
-    public List<User> getAllPatient(){
+    public List<UserLogin> getAllPatient(){
         return userRepo.findByRoleRoleName("patient");
     }
-    public List<User> getAllDoctor(){
+    public List<UserLogin> getAllDoctor(){
         return userRepo.findByRoleRoleName("doctor");
     }
-    public List<User> getAllRadiologist(){
+    public List<UserLogin> getAllRadiologist(){
         return userRepo.findByRoleRoleName("radiologist");
     }
-    public List<User> getAllLab(){
+    public List<UserLogin> getAllLab(){
         return userRepo.findByRoleRoleName("lab_technician");
     }
 }
