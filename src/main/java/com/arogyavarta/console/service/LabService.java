@@ -1,6 +1,7 @@
 package com.arogyavarta.console.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.arogyavarta.console.DTO.LabDTO;
@@ -21,6 +22,9 @@ public class LabService {
     @Autowired
     private CredentialsRepository credentialsRepository;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     @Transactional
     public void createLab(LabDTO labDTO) {
         Lab lab = new Lab();
@@ -37,7 +41,7 @@ public class LabService {
         Credentials credentials = Credentials.builder()
                 .user(lab)
                 .username(labDTO.getUsername())
-                .password(labDTO.getPassword())
+                .password(passwordEncoder.encode(labDTO.getPassword()))
                 .userType(UserType.LAB)
                 .build();
         credentialsRepository.save(credentials);

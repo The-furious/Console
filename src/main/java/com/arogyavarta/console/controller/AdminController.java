@@ -14,10 +14,12 @@ import org.springframework.web.bind.annotation.RestController;
 import com.arogyavarta.console.DTO.AdminDTO;
 import com.arogyavarta.console.DTO.DoctorDTO;
 import com.arogyavarta.console.DTO.LabDTO;
+import com.arogyavarta.console.DTO.RadiologistDTO;
 import com.arogyavarta.console.entity.UserLogin;
 import com.arogyavarta.console.service.AdminService;
 import com.arogyavarta.console.service.DoctorService;
 import com.arogyavarta.console.service.LabService;
+import com.arogyavarta.console.service.RadiologistService;
 
 @RestController
 @RequestMapping("/admin")
@@ -32,41 +34,9 @@ public class AdminController {
     private DoctorService doctorService;
     @Autowired
     private LabService labService;
-    @PostMapping("/doctor/signup")
-    public ResponseEntity<UserLogin> doctorSignUp(@RequestBody UserLogin user){
-        UserLogin newUser = adminService.doctorSignUp(user);
-        if(newUser.getUserName()==null) return new ResponseEntity<>(user, HttpStatus.CONFLICT);
-        return new ResponseEntity<>(newUser, HttpStatus.OK);
-    }
-//    @PostMapping("/admin/signup")
-//    public ResponseEntity<User> adminSignUp(@RequestBody User user){
-//        User newUser = adminService.adminSignUp(user);
-//        if(newUser.getUserName()==null) return new ResponseEntity<>(user, HttpStatus.CONFLICT);
-//        return new ResponseEntity<>(newUser, HttpStatus.OK);
-//    }
-    @PostMapping("/radiologist/signup")
-    public ResponseEntity<UserLogin> radiologistSignUp(@RequestBody UserLogin user){
-        UserLogin newUser = adminService.radiologistSignUp(user);
-        if(newUser.getUserName()==null) return new ResponseEntity<>(user, HttpStatus.CONFLICT);
-        return new ResponseEntity<>(newUser, HttpStatus.OK);
-    }
-    @PostMapping("/lab/signup")
-    public ResponseEntity<UserLogin> labSignUp(@RequestBody UserLogin user){
-        UserLogin newUser = adminService.labSignUp(user);
-        if(newUser.getUserName()==null) return new ResponseEntity<>(user, HttpStatus.CONFLICT);
-        return new ResponseEntity<>(newUser, HttpStatus.OK);
-    }
+    @Autowired
+    private RadiologistService radiologistService;
 
-//    @PostMapping("/createNewRole")
-//    public ResponseEntity<Role>  createNewRole(@RequestBody Role role){
-//        Role newRole=roleService.createNewRole(role);
-//        return new ResponseEntity<>(newRole, HttpStatus.OK);
-//    }
-//    @PreAuthorize("hasAuthority('admin')")
-//    @GetMapping("/getAllRoles")
-//    public ResponseEntity<List<Role>> getAllRoles(){
-//        return new ResponseEntity<>(roleService.getALLRoles(),HttpStatus.OK);
-//    }
     @GetMapping("/getAllUser")
     public ResponseEntity<List<UserLogin>> getAllUser(){
         return new ResponseEntity<>(adminService.getAllUser(),HttpStatus.OK);
@@ -103,6 +73,12 @@ public class AdminController {
     public ResponseEntity<String> createLab(@RequestBody LabDTO labDTO) {
         labService.createLab(labDTO);
         return ResponseEntity.ok("Lab created successfully");
+    }
+
+    @PostMapping("/createRadiologist")
+    public ResponseEntity<String> createRadiologist(@RequestBody RadiologistDTO radiologistDTO) {
+        radiologistService.createRadiologist(radiologistDTO);
+        return ResponseEntity.ok("Radiologist created successfully");
     }
 
 }
