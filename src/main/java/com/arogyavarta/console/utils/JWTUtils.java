@@ -12,6 +12,8 @@ import javax.crypto.spec.SecretKeySpec;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
+import com.arogyavarta.console.config.Constants;
+
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 
@@ -19,11 +21,11 @@ import io.jsonwebtoken.Jwts;
 public class JWTUtils {
 
     private SecretKey Key;
-    private  static  final long EXPIRATION_TIME = 86400000; //24hours or 86400000 milisecs
+    private  static  final long EXPIRATION_TIME = Constants.EXPIRATION_TIME; 
     public JWTUtils(){
-        String secreteString = "843567893696976453275974432697R634976R738467TR678T34865R6834R8763T478378637664538745673865783678548735687R3";
+        String secreteString = Constants.SECRET;
         byte[] keyBytes = Base64.getDecoder().decode(secreteString.getBytes(StandardCharsets.UTF_8));
-        this.Key = new SecretKeySpec(keyBytes, "HmacSHA256");
+        this.Key = new SecretKeySpec(keyBytes, Constants.ENCRYPTION_ALGO);
     }
 
     public String generateToken(UserDetails userDetails){

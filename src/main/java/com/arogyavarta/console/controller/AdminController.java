@@ -1,9 +1,6 @@
 package com.arogyavarta.console.controller;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,7 +12,6 @@ import com.arogyavarta.console.DTO.AdminDTO;
 import com.arogyavarta.console.DTO.DoctorDTO;
 import com.arogyavarta.console.DTO.LabDTO;
 import com.arogyavarta.console.DTO.RadiologistDTO;
-import com.arogyavarta.console.entity.UserLogin;
 import com.arogyavarta.console.service.AdminService;
 import com.arogyavarta.console.service.DoctorService;
 import com.arogyavarta.console.service.LabService;
@@ -24,10 +20,6 @@ import com.arogyavarta.console.service.RadiologistService;
 @RestController
 @RequestMapping("/admin")
 public class AdminController {
-   @GetMapping("/sayHello")
-   public String sayHello(){
-       return "Hello World!";
-   }
     @Autowired
     private AdminService adminService;
     @Autowired
@@ -37,25 +29,14 @@ public class AdminController {
     @Autowired
     private RadiologistService radiologistService;
 
-    @GetMapping("/getAllUser")
-    public ResponseEntity<List<UserLogin>> getAllUser(){
-        return new ResponseEntity<>(adminService.getAllUser(),HttpStatus.OK);
-    }
-    @GetMapping("/getAllPatient")
-    public ResponseEntity<List<UserLogin>> getAllPatient(){
-        return new ResponseEntity<>(adminService.getAllPatient(),HttpStatus.OK);
-    }
-    @GetMapping("/getAllDoctor")
-    public ResponseEntity<List<UserLogin>> getAllDoctor(){
-        return new ResponseEntity<>(adminService.getAllDoctor(),HttpStatus.OK);
-    }
-    @GetMapping("/getAllRadiologist")
-    public ResponseEntity<List<UserLogin>> getAllRadiologist(){
-        return new ResponseEntity<>(adminService.getAllRadiologist(),HttpStatus.OK);
-    }
-    @GetMapping("/getAllLab")
-    public ResponseEntity<List<UserLogin>> getAllLab(){
-        return new ResponseEntity<>(adminService.getAllLab(),HttpStatus.OK);
+    // @GetMapping("/getAllUser")
+    // public ResponseEntity<List<UserLogin>> getAllUser(){
+    //     return new ResponseEntity<>(adminService.getAllUser(),HttpStatus.OK);
+    // }
+
+    @GetMapping("/sayHello")
+    public String sayHello(){
+        return "Hello World!";
     }
 
     @PostMapping("/createAdmin")

@@ -17,14 +17,14 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import com.arogyavarta.console.service.OurUserDetailsService;
+import com.arogyavarta.console.service.CredentialsService;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
 
     @Autowired
-    private OurUserDetailsService ourUserDetailsService;
+    private CredentialsService credentialsService;
     @Autowired
     private JwtAuthFilter jwtAuthFIlter;
 
@@ -34,8 +34,11 @@ public class SecurityConfig {
                 .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(request -> request.requestMatchers("/auth/**", "/public/**", "/swagger-ui/**", "/v3/**").permitAll()
                         .requestMatchers("/admin/**").hasAnyAuthority("ADMIN")
-                        // .requestMatchers("/user/**").hasAnyAuthority("USER")
-                        // .requestMatchers("/adminuser/**").hasAnyAuthority("USER", "ADMIN")
+                        .requestMatchers("/doctor/**").hasAnyAuthority("DOCTOR")
+                        .requestMatchers("/radiologist/**").hasAnyAuthority("RADIOLOGIST")
+                        .requestMatchers("/patient/**").hasAnyAuthority("PATIENT")
+                        .requestMatchers("/lab/**").hasAnyAuthority("LAB")
+                        // .requestMatchers("/radiologist/**").hasAnyAuthority("USER", "ADMIN")
                         .anyRequest().authenticated())
                 .sessionManagement(manager -> manager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider()).addFilterBefore(
@@ -47,7 +50,7 @@ public class SecurityConfig {
     @Bean
     public AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
-        daoAuthenticationProvider.setUserDetailsService(ourUserDetailsService);
+        daoAuthenticationProvider.setUserDetailsService(credentialsService);
         daoAuthenticationProvider.setPasswordEncoder(passwordEncoder());
         return daoAuthenticationProvider;
     }
