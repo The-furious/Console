@@ -21,11 +21,11 @@ import io.jsonwebtoken.Jwts;
 public class JWTUtils {
 
     private SecretKey Key;
-    private  static  final long EXPIRATION_TIME = Constants.EXPIRATION_TIME; 
+    private  static  final long EXPIRATION_TIME = Constants.JWT_EXPIRATION_TIME; 
     public JWTUtils(){
-        String secreteString = Constants.SECRET;
+        String secreteString = Constants.JWT_SECRET;
         byte[] keyBytes = Base64.getDecoder().decode(secreteString.getBytes(StandardCharsets.UTF_8));
-        this.Key = new SecretKeySpec(keyBytes, Constants.ENCRYPTION_ALGO);
+        this.Key = new SecretKeySpec(keyBytes, Constants.JWT_ENCRYPTION_ALGO);
     }
 
     public String generateToken(UserDetails userDetails){
