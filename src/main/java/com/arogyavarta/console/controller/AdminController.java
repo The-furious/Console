@@ -14,11 +14,14 @@ import com.arogyavarta.console.DTO.AdminDTO;
 import com.arogyavarta.console.DTO.DoctorDTO;
 import com.arogyavarta.console.DTO.LabDTO;
 import com.arogyavarta.console.entity.Doctor;
+import com.arogyavarta.console.entity.Lab;
+import com.arogyavarta.console.entity.Radiologist;
 import com.arogyavarta.console.entity.RadiologistDTO;
 import com.arogyavarta.console.service.AdminService;
 import com.arogyavarta.console.service.DoctorService;
 import com.arogyavarta.console.service.LabService;
 import com.arogyavarta.console.service.RadiologistService;
+import com.arogyavarta.console.utils.EmailUtility;
 
 @RestController
 @RequestMapping("/admin")
@@ -39,6 +42,7 @@ public class AdminController {
 
     @GetMapping("/sayHello")
     public String sayHello(){
+        EmailUtility.sendEmail("stsiyer@gmail.com", "Test", "Email is working!");
         return "Hello World!";
     }
 
@@ -68,6 +72,16 @@ public class AdminController {
     @GetMapping("/getAllDoctors")
     public List<Doctor> getAllDoctors() {
         return doctorService.getAllDoctors();
+    }
+
+    @GetMapping("/getAllLabs")
+    public List<Lab> getAllLab() {
+        return labService.getAllLabs();
+    }
+
+    @GetMapping("/getAllRadiologist")
+    public List<Radiologist> getAllRadiologist() {
+        return radiologistService.getAllRadiologists();
     }
 
 }
