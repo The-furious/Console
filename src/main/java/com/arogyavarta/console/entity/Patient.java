@@ -15,8 +15,8 @@ import lombok.Setter;
 @Table(name = "Patient")
 @Getter
 @Setter
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @Builder
 @PrimaryKeyJoinColumn(name = "patient_id")
 public class Patient extends User {
@@ -24,7 +24,10 @@ public class Patient extends User {
     private double weight;
     private double height;
     private String bloodGroup;
-    private int emergencyContact;
+    private String emergencyContact;
+    private String state;
+    private String country;
+    private int pincode;
     @Override
     public UserType getUserType() {
         return UserType.PATIENT;

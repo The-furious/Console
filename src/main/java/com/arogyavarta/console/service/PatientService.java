@@ -1,36 +1,52 @@
-// package com.arogyavarta.console.service;
+package com.arogyavarta.console.service;
 
-// import com.arogyavarta.console.entity.Role;
-// import com.arogyavarta.console.entity.UserLogin;
-// import com.arogyavarta.console.repo.RoleRepo;
-// import com.arogyavarta.console.repo.UserRepo;
-// import org.springframework.beans.factory.annotation.Autowired;
-// import org.springframework.security.crypto.password.PasswordEncoder;
-// import org.springframework.stereotype.Service;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
-// import java.util.HashSet;
-// import java.util.Optional;
-// import java.util.Set;
+import com.arogyavarta.console.DTO.PatientDTO;
+import com.arogyavarta.console.entity.Credentials;
+import com.arogyavarta.console.entity.Patient;
+import com.arogyavarta.console.entity.UserType;
+import com.arogyavarta.console.repo.CredentialsRepository;
+import com.arogyavarta.console.repo.PatientRepository;
 
-// @Service
-// public class PatientService {
-//     @Autowired
-//     private UserRepo userRepo;
-//     @Autowired
-//     private RoleRepo roleRepo;
-//     @Autowired
-//     private PasswordEncoder passwordEncoder;
-//     public UserLogin patientSignup(UserLogin user){
-//         Optional<UserLogin> newUser=userRepo.findById(user.getUserName());
-//         if(newUser.isPresent()){
-//             return new UserLogin();
-//         }
-//         Role patientRole = roleRepo.findById("patient")
-//                 .orElseThrow(() -> new RuntimeException("Role not found with name: patient"));
-//         Set<Role> roles=new HashSet<>();
-//         roles.add(patientRole);
-//         user.setRole(roles);
-//         user.setPassword(passwordEncoder.encode(user.getPassword()));
-//         return userRepo.save(user);
-//     }
-// }
+import jakarta.transaction.Transactional;
+
+@Service
+public class PatientService {
+
+    @Autowired
+    private PatientRepository patientRepository;
+
+    @Autowired
+    private CredentialsRepository credentialsRepository;
+
+    @Transactional
+    public void createPatient(PatientDTO patientDTO) {
+        Patient patient = new Patient();
+        patient.setName(patientDTO.getName());
+        patient.setEmail(patientDTO.getEmail());
+        patient.setProfilePhotoUrl(patientDTO.getProfilePhotoUrl());
+        patient.setContactNumber(patientDTO.getContactNumber());
+        patient.setAddress(patientDTO.getAddress());
+        patient.setDateOfBirth(patientDTO.getDateOfBirth());
+        patient.setWeight(patientDTO.getWeight());
+        patient.setHeight(patientDTO.getHeight());
+        patient.setBloodGroup(patientDTO.getBloodGroup());
+        patient.setEmergencyContact(patientDTO.getEmergencyContact());
+        patient.setState(patientDTO.getState());
+        patient.setCountry(patientDTO.getCountry());
+        patient.setPincode(patientDTO.getPincode());
+
+        patientRepository.save(patient);
+
+
+        Credentials credentials = Credentials.builder()
+                .user(patient)
+                .username(patientDTO.getUsername())
+                .password(patientDTO.getPassword())
+                .userType(UserType.PATIENT)
+                .build();
+        credentialsRepository.save(credentials);
+    }
+}
