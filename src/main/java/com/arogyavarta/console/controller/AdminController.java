@@ -1,5 +1,7 @@
 package com.arogyavarta.console.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,7 +13,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.arogyavarta.console.DTO.AdminDTO;
 import com.arogyavarta.console.DTO.DoctorDTO;
 import com.arogyavarta.console.DTO.LabDTO;
-import com.arogyavarta.console.DTO.RadiologistDTO;
+import com.arogyavarta.console.entity.Doctor;
+import com.arogyavarta.console.entity.RadiologistDTO;
 import com.arogyavarta.console.service.AdminService;
 import com.arogyavarta.console.service.DoctorService;
 import com.arogyavarta.console.service.LabService;
@@ -60,6 +63,11 @@ public class AdminController {
     public ResponseEntity<String> createRadiologist(@RequestBody RadiologistDTO radiologistDTO) {
         radiologistService.createRadiologist(radiologistDTO);
         return ResponseEntity.ok("Radiologist created successfully");
+    }
+
+    @GetMapping("/getAllDoctors")
+    public List<Doctor> getAllDoctors() {
+        return doctorService.getAllDoctors();
     }
 
 }

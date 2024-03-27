@@ -1,4 +1,4 @@
-package com.arogyavarta.console.DTO;
+package com.arogyavarta.console.entity;
 
 import lombok.Data;
 
