@@ -11,6 +11,5 @@ public class LabDTO {
     private String address;
     private String username;
     private String password;
-    private String location;
     private String accreditationNumber;
 }

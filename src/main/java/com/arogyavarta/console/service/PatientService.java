@@ -1,6 +1,7 @@
 package com.arogyavarta.console.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.arogyavarta.console.DTO.PatientDTO;
@@ -10,6 +11,7 @@ import com.arogyavarta.console.entity.UserType;
 import com.arogyavarta.console.repo.CredentialsRepository;
 import com.arogyavarta.console.repo.PatientRepository;
 
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 
 @Service
@@ -20,6 +22,9 @@ public class PatientService {
 
     @Autowired
     private CredentialsRepository credentialsRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Transactional
     public void createPatient(PatientDTO patientDTO) {
@@ -44,9 +49,14 @@ public class PatientService {
         Credentials credentials = Credentials.builder()
                 .user(patient)
                 .username(patientDTO.getUsername())
-                .password(patientDTO.getPassword())
+                .password(passwordEncoder.encode(patientDTO.getPassword()))
                 .userType(UserType.PATIENT)
                 .build();
         credentialsRepository.save(credentials);
+    }
+
+    public Patient getPatientById(Long patientId) {
+        return patientRepository.findById(patientId)
+                .orElseThrow(() -> new EntityNotFoundException("Patient not found with id: " + patientId));
     }
 }

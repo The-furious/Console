@@ -35,7 +35,6 @@ public class LabService {
         lab.setProfilePhotoUrl(labDTO.getProfilePhotoUrl());
         lab.setContactNumber(labDTO.getContactNumber());
         lab.setAddress(labDTO.getAddress());
-        lab.setLocation(labDTO.getLocation());
         lab.setAccreditationNumber(labDTO.getAccreditationNumber());
 
         labRepository.save(lab);

@@ -16,7 +16,6 @@ import lombok.Setter;
 @Builder
 @PrimaryKeyJoinColumn(name = "lab_id")
 public class Lab extends User {
-    private String location;
     private String accreditationNumber;
     public Lab() {
         this.setUserType(UserType.LAB);
