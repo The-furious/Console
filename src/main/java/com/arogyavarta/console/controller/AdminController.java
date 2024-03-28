@@ -1,89 +1,87 @@
 package com.arogyavarta.console.controller;
 
-import com.arogyavarta.console.entity.Role;
-import com.arogyavarta.console.entity.User;
-import com.arogyavarta.console.service.RoleService;
-import com.arogyavarta.console.service.AdminService;
-import com.arogyavarta.console.service.UserDetailsServiceImpl;
-import jakarta.annotation.security.PermitAll;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.arogyavarta.console.DTO.AdminDTO;
+import com.arogyavarta.console.DTO.DoctorDTO;
+import com.arogyavarta.console.DTO.LabDTO;
+import com.arogyavarta.console.entity.Doctor;
+import com.arogyavarta.console.entity.Lab;
+import com.arogyavarta.console.entity.Radiologist;
+import com.arogyavarta.console.entity.RadiologistDTO;
+import com.arogyavarta.console.service.AdminService;
+import com.arogyavarta.console.service.DoctorService;
+import com.arogyavarta.console.service.LabService;
+import com.arogyavarta.console.service.RadiologistService;
+import com.arogyavarta.console.utils.EmailUtility;
 
 @RestController
 @RequestMapping("/admin")
 public class AdminController {
-//    @GetMapping("/sayHello")
-//    @PermitAll
-//    public String sayHello(){
-//        return "Hello World!";
-//    }
-    @Autowired
-    private RoleService roleService;
     @Autowired
     private AdminService adminService;
-    private static final Logger logger = LoggerFactory.getLogger(UserDetailsServiceImpl.class);
-//    @PreAuthorize("hasRole('admin')")
-    @PostMapping("/doctor/signup")
-    public ResponseEntity<User> doctorSignUp(@RequestBody User user){
-        User newUser = adminService.doctorSignUp(user);
-        if(newUser.getUserName()==null) return new ResponseEntity<>(user, HttpStatus.CONFLICT);
-        return new ResponseEntity<>(newUser, HttpStatus.OK);
-    }
-//    @PostMapping("/admin/signup")
-//    public ResponseEntity<User> adminSignUp(@RequestBody User user){
-//        User newUser = adminService.adminSignUp(user);
-//        if(newUser.getUserName()==null) return new ResponseEntity<>(user, HttpStatus.CONFLICT);
-//        return new ResponseEntity<>(newUser, HttpStatus.OK);
-//    }
-    @PostMapping("/radiologist/signup")
-    public ResponseEntity<User> radiologistSignUp(@RequestBody User user){
-        User newUser = adminService.radiologistSignUp(user);
-        if(newUser.getUserName()==null) return new ResponseEntity<>(user, HttpStatus.CONFLICT);
-        return new ResponseEntity<>(newUser, HttpStatus.OK);
-    }
-    @PostMapping("/lab/signup")
-    public ResponseEntity<User> labSignUp(@RequestBody User user){
-        User newUser = adminService.labSignUp(user);
-        if(newUser.getUserName()==null) return new ResponseEntity<>(user, HttpStatus.CONFLICT);
-        return new ResponseEntity<>(newUser, HttpStatus.OK);
+    @Autowired
+    private DoctorService doctorService;
+    @Autowired
+    private LabService labService;
+    @Autowired
+    private RadiologistService radiologistService;
+
+    // @GetMapping("/getAllUser")
+    // public ResponseEntity<List<UserLogin>> getAllUser(){
+    //     return new ResponseEntity<>(adminService.getAllUser(),HttpStatus.OK);
+    // }
+
+    @GetMapping("/sayHello")
+    public String sayHello(){
+        EmailUtility.sendEmail("stsiyer@gmail.com", "Test", "Email is working!");
+        return "Hello World!";
     }
 
-//    @PostMapping("/createNewRole")
-//    public ResponseEntity<Role>  createNewRole(@RequestBody Role role){
-//        Role newRole=roleService.createNewRole(role);
-//        return new ResponseEntity<>(newRole, HttpStatus.OK);
-//    }
-//    @PreAuthorize("hasAuthority('admin')")
-//    @GetMapping("/getAllRoles")
-//    public ResponseEntity<List<Role>> getAllRoles(){
-//        return new ResponseEntity<>(roleService.getALLRoles(),HttpStatus.OK);
-//    }
-    @GetMapping("/getAllUser")
-    public ResponseEntity<List<User>> getAllUser(){
-        return new ResponseEntity<>(adminService.getAllUser(),HttpStatus.OK);
+    @PostMapping("/createAdmin")
+    public ResponseEntity<String> createAdmin(@RequestBody AdminDTO adminDTO) {
+        adminService.createAdmin(adminDTO);
+        return ResponseEntity.ok("Admin created successfully");
     }
-    @GetMapping("/getAllPatient")
-    public ResponseEntity<List<User>> getAllPatient(){
-        return new ResponseEntity<>(adminService.getAllPatient(),HttpStatus.OK);
+    @PostMapping("/createDoctor")
+    public ResponseEntity<String> createDoctor(@RequestBody DoctorDTO doctorDTO) {
+        doctorService.createDoctor(doctorDTO);
+        return ResponseEntity.ok("Doctor created successfully");
     }
-    @GetMapping("/getAllDoctor")
-    public ResponseEntity<List<User>> getAllDoctor(){
-        return new ResponseEntity<>(adminService.getAllDoctor(),HttpStatus.OK);
+
+    @PostMapping("/createLab")
+    public ResponseEntity<String> createLab(@RequestBody LabDTO labDTO) {
+        labService.createLab(labDTO);
+        return ResponseEntity.ok("Lab created successfully");
     }
+
+    @PostMapping("/createRadiologist")
+    public ResponseEntity<String> createRadiologist(@RequestBody RadiologistDTO radiologistDTO) {
+        radiologistService.createRadiologist(radiologistDTO);
+        return ResponseEntity.ok("Radiologist created successfully");
+    }
+
+    @GetMapping("/getAllDoctors")
+    public List<Doctor> getAllDoctors() {
+        return doctorService.getAllDoctors();
+    }
+
+    @GetMapping("/getAllLabs")
+    public List<Lab> getAllLab() {
+        return labService.getAllLabs();
+    }
+
     @GetMapping("/getAllRadiologist")
-    public ResponseEntity<List<User>> getAllRadiologist(){
-        return new ResponseEntity<>(adminService.getAllRadiologist(),HttpStatus.OK);
-    }
-    @GetMapping("/getAllLab")
-    public ResponseEntity<List<User>> getAllLab(){
-        return new ResponseEntity<>(adminService.getAllLab(),HttpStatus.OK);
+    public List<Radiologist> getAllRadiologist() {
+        return radiologistService.getAllRadiologists();
     }
 
 }

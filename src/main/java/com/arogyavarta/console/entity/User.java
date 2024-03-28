@@ -1,42 +1,33 @@
 package com.arogyavarta.console.entity;
 
-import jakarta.persistence.*;
-import lombok.*;
-import net.minidev.json.annotate.JsonIgnore;
-//import org.springframework.security.core.GrantedAuthority;
-//import org.springframework.security.core.authority.SimpleGrantedAuthority;
-//import org.springframework.security.core.userdetails.UserDetails;
-//import org.springframework.security.crypto.password.PasswordEncoder;
 
-import java.util.Set;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Inheritance;
+import jakarta.persistence.InheritanceType;
+import jakarta.persistence.Table;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
-@Builder
 @Entity
+@Table(name = "User")
+@Inheritance(strategy = InheritanceType.JOINED)
 @Getter
 @Setter
-@AllArgsConstructor
-@NoArgsConstructor
 public class User {
     @Id
-    @Column(unique = true)
-    private String userName;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long userId;
+    @Enumerated(EnumType.STRING)
+    private UserType userType;
 
-    @JsonIgnore
-    private String password; // Encoded password
-
-    private String userFirstName;
-    private String userLastName;
-
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinTable(name = "role_name",
-    joinColumns = {
-            @JoinColumn(name = "USER_ID")
-    },
-            inverseJoinColumns ={
-            @JoinColumn(name="ROLE_ID")
-    })
-    private Set<Role> role;
-
-
+    private String name;
+    private String email;
+    private String profilePhotoUrl;
+    private String contactNumber;
+    private String address;
 }
