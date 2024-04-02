@@ -14,14 +14,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.arogyavarta.console.utils.S3StorageUtil;
+import com.arogyavarta.console.utils.StorageUtil;
 
 @RestController
 @RequestMapping("/file")
 public class StorageController {
 
     @Autowired
-    private S3StorageUtil service;
+    private StorageUtil service;
 
     @PostMapping("/upload")
     public ResponseEntity<String> uploadFile(@RequestParam(value = "file") MultipartFile file) {
