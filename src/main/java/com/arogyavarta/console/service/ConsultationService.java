@@ -1,6 +1,7 @@
 package com.arogyavarta.console.service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -68,6 +69,26 @@ public class ConsultationService {
                                  .consultation(newConsultation)
                                  .build();
         consentRepository.save(consent);
+
+        Consent consentPatient = Consent.builder()
+                .userType(UserType.PATIENT)
+                .consentDate(LocalDateTime.now())
+                .givenConsent(true)
+                .user(patient)
+                .consultation(newConsultation)
+                .build();
+        consentRepository.save(consentPatient);
         return newConsultation;  
+    }
+    public List<Consultation> getConsultationHistory(Long userId){
+        List<String> consentIds=consentRepository.findConsultationIdsByConsentAndUserId(userId);
+        LocalDateTime currentDate = LocalDateTime.now();
+        return consultationRepository.findByConsultationIdInAndEndDateBefore(consentIds, currentDate);
+    }
+    public List<Consultation> getConsultationPresent(Long userId){
+        List<String> consentIds=consentRepository.findConsultationIdsByConsentAndUserId(userId);
+        LocalDateTime currentDate = LocalDateTime.now();
+        return consultationRepository.findByConsultationIdInAndEndDateAfter(consentIds, currentDate);
+
     }
 }
