@@ -41,6 +41,7 @@ public class PatientService {
         patient.setEmergencyContact(patientDTO.getEmergencyContact());
         patient.setState(patientDTO.getState());
         patient.setCountry(patientDTO.getCountry());
+        patient.setUserType(UserType.PATIENT);
         patient.setPincode(patientDTO.getPincode());
 
         patientRepository.save(patient);
