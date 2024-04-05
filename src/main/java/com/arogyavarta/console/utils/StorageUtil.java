@@ -19,7 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Slf4j
-public class S3StorageUtil {
+public class StorageUtil {
     private String bucketName = Constants.AWS_BUCKET_NAME;
 
     @Autowired
@@ -30,7 +30,7 @@ public class S3StorageUtil {
         String fileName = System.currentTimeMillis() + "_" + file.getOriginalFilename();
         s3Client.putObject(new PutObjectRequest(bucketName, fileName, fileObj));
         fileObj.delete();
-        return "File uploaded : " + fileName;
+        return fileName;
     }
 
 

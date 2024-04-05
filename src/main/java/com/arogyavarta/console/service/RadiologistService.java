@@ -6,9 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.arogyavarta.console.DTO.RadiologistDTO;
 import com.arogyavarta.console.entity.Credentials;
 import com.arogyavarta.console.entity.Radiologist;
-import com.arogyavarta.console.entity.RadiologistDTO;
 import com.arogyavarta.console.entity.UserType;
 import com.arogyavarta.console.repo.CredentialsRepository;
 import com.arogyavarta.console.repo.RadiologistRepository;
