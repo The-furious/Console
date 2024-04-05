@@ -3,12 +3,16 @@ package com.arogyavarta.console.utils;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.URL;
+import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.amazonaws.HttpMethod;
 import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.model.GeneratePresignedUrlRequest;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.amazonaws.services.s3.model.S3Object;
 import com.amazonaws.services.s3.model.S3ObjectInputStream;
@@ -33,7 +37,6 @@ public class StorageUtil {
         return fileName;
     }
 
-
     public byte[] downloadFile(String fileName) {
         S3Object s3Object = s3Client.getObject(bucketName, fileName);
         S3ObjectInputStream inputStream = s3Object.getObjectContent();
@@ -46,12 +49,18 @@ public class StorageUtil {
         return null;
     }
 
-
     public String deleteFile(String fileName) {
         s3Client.deleteObject(bucketName, fileName);
         return fileName + " removed ...";
     }
 
+    public URL generatePresignedUrl(String fileName) {
+        Date expiration = new Date(System.currentTimeMillis() + Constants.PRE_SIGNED_URL_EXPIRY); // 1 hour
+        GeneratePresignedUrlRequest generatePresignedUrlRequest = new GeneratePresignedUrlRequest(bucketName, fileName)
+                .withMethod(HttpMethod.GET)
+                .withExpiration(expiration);
+        return s3Client.generatePresignedUrl(generatePresignedUrlRequest);
+    }
 
     private File convertMultiPartFileToFile(MultipartFile file) {
         File convertedFile = new File(file.getOriginalFilename());
