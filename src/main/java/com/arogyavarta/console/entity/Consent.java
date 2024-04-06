@@ -45,4 +45,5 @@ public class Consent {
 
     @Enumerated(EnumType.STRING)
     private UserType userType;
+
 }
