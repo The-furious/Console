@@ -1,5 +1,6 @@
 package com.arogyavarta.console.controller;
 
+import com.arogyavarta.console.DTO.ConsentNameDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 
@@ -51,5 +52,12 @@ public class ConsultationController {
     public ResponseEntity<List<Consultation>> getConsultationPresent(@PathVariable Long userId){
         List<Consultation> previousConsultation=consultationService.getConsultationPresent(userId);
         return ResponseEntity.ok(previousConsultation);
+    }
+
+
+    @GetMapping("/{consultationId}")
+    public ResponseEntity<List<ConsentNameDTO>> getGivenConsent(@PathVariable Long consultationId){
+        List<ConsentNameDTO> givenconsent = consultationService.getGivenConsent(consultationId);
+        return ResponseEntity.ok(givenconsent);
     }
 }

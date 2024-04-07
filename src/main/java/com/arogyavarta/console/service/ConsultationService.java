@@ -2,7 +2,9 @@ package com.arogyavarta.console.service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
+import com.arogyavarta.console.DTO.ConsentNameDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -90,5 +92,17 @@ public class ConsultationService {
         LocalDateTime currentDate = LocalDateTime.now();
         return consultationRepository.findByConsultationIdInAndEndDateAfter(consentIds, currentDate);
 
+    }
+
+
+    public List<ConsentNameDTO> getGivenConsent(Long consultationId) {
+        List<Consent> consent = consentRepository.findAllByUserIdAndConsultationId(consultationId);
+        return consent.stream().map(this::mapComsentToConsentNameDTO).collect(Collectors.toList());
+    }
+    private ConsentNameDTO mapComsentToConsentNameDTO(Consent consent) {
+        ConsentNameDTO consentNameDTO = new ConsentNameDTO();
+        consentNameDTO.setGivenConsent(consent.getGivenConsent());
+        consentNameDTO.setUserId(consent.getUser().getUserId());
+        return consentNameDTO;
     }
 }
