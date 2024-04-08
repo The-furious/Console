@@ -17,4 +17,6 @@ public interface ConsultationRepository extends JpaRepository<Consultation, Long
     Long findByConsultationId(Long consultancyId);
 
     List<Consultation> findAllDoctorByConsultationId(Long consultationId);
+    @Query(value = "SELECT * FROM consultation WHERE patient_id = ?1", nativeQuery = true)
+    List<Consultation> findAllByPatientId(Long userId);
 }

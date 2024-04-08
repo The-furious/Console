@@ -1,5 +1,6 @@
 package com.arogyavarta.console.controller;
 
+import com.arogyavarta.console.dto.NonConsentDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,6 +13,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.arogyavarta.console.dto.PatientDTO;
 import com.arogyavarta.console.entity.Patient;
 import com.arogyavarta.console.service.PatientService;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/patient")
@@ -29,5 +32,10 @@ public class PatientController {
     public ResponseEntity<Patient> getPatientById(@PathVariable("id") Long id) {
         Patient patient = patientService.getPatientById(id);
         return ResponseEntity.ok(patient);
+    }
+    @GetMapping("/notification/non-consents/{userId}")
+    public ResponseEntity<List<NonConsentDTO>> getAllNonConsents(@PathVariable Long userId){
+        List<NonConsentDTO> nonConsentDTO=patientService.getAllUngivenConsents(userId);
+        return ResponseEntity.ok(nonConsentDTO);
     }
 }
