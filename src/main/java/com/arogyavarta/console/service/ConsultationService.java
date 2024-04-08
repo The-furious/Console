@@ -98,7 +98,7 @@ public class ConsultationService {
         UserType userType=credentials.getUserType();
         if(userType.equals(UserType.DOCTOR)){
             List<Consent> consent = consentRepository.findAllByUserIdAndConsultationIdNotDoctor(consultationId,userId);
-            return consent.stream().map(this::mapConsentToConsentNameDTO).collect(Collectors.toList());
+            return consent.stream().filter(cons -> cons.getUserType() != UserType.LAB).map(this::mapConsentToConsentNameDTO).collect(Collectors.toList());
         }
         List<Consultation> consultation = consultationRepository.findAllDoctorByConsultationId(consultationId);
         return consultation.stream().map(this::mapDoctorToConsentNameDTO).collect(Collectors.toList());
