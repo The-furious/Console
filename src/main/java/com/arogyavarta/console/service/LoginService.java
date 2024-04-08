@@ -9,10 +9,10 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
-import com.arogyavarta.console.DTO.ChangePasswordRequest;
-import com.arogyavarta.console.DTO.LoginReqDTO;
-import com.arogyavarta.console.DTO.LoginRes;
-import com.arogyavarta.console.DTO.OTPRequestDTO;
+import com.arogyavarta.console.dto.ChangePasswordRequest;
+import com.arogyavarta.console.dto.LoginReqDTO;
+import com.arogyavarta.console.dto.LoginRes;
+import com.arogyavarta.console.dto.OTPRequestDTO;
 import com.arogyavarta.console.config.Constants;
 import com.arogyavarta.console.entity.Credentials;
 import com.arogyavarta.console.entity.OTP;
@@ -45,7 +45,7 @@ public class LoginService {
         try {
             Credentials user = credentialsRepo.findByUsername(signinRequest.getUsername()).orElseThrow();
             System.out.println("USER IS: "+ user);
-            if( user.getUserType().toString().equals(signinRequest.getUserType())==false)
+            if(!user.getUserType().toString().equals(signinRequest.getUserType()))
             {
                 throw new Exception("Role mismatch");
             }

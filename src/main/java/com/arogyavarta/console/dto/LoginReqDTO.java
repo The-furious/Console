@@ -1,13 +1,12 @@
-package com.arogyavarta.console.DTO;
+package com.arogyavarta.console.dto;
 
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-public class AuthRequestDTO {
-
+public class LoginReqDTO {
     private String username;
     private String password;
+    private String userType;
 }

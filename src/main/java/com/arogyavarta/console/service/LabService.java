@@ -9,8 +9,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.arogyavarta.console.DTO.LabDTO;
-import com.arogyavarta.console.DTO.LabUploadDTO;
+import com.arogyavarta.console.dto.LabDTO;
+import com.arogyavarta.console.dto.LabUploadDTO;
 import com.arogyavarta.console.entity.Consent;
 import com.arogyavarta.console.entity.Consultation;
 import com.arogyavarta.console.entity.Credentials;

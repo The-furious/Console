@@ -6,7 +6,7 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.arogyavarta.console.DTO.ImageDTO;
+import com.arogyavarta.console.dto.ImageDTO;
 import com.arogyavarta.console.entity.Images;
 import com.arogyavarta.console.repo.ImagesRepository;
 import com.arogyavarta.console.utils.StorageUtil;

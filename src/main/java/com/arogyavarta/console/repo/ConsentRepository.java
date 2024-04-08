@@ -14,6 +14,8 @@ public interface ConsentRepository extends JpaRepository<Consent, Long> {
     @Query(value = "SELECT * FROM consent WHERE consultation_id = ?1 AND user_id = ?2", nativeQuery = true)
     Optional<Consent> findByConsultationIdAndUserId(Long consultancyId, Long userId);
     @Query(value = "SELECT * FROM consent WHERE consultation_id=?1", nativeQuery = true)
-    List<Consent> findAllByUserIdAndConsultationId(Long consultationId);
+    List<Consent> findAllByConsultationId(Long consultationId);
+    @Query(value = "SELECT * FROM consent WHERE consultation_id=?1 and user_id!=?2", nativeQuery = true)
+    List<Consent> findAllByUserIdAndConsultationIdNotDoctor(Long consultationId, Long userId);
 
 }

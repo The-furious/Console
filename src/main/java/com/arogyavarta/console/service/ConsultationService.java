@@ -1,24 +1,19 @@
 package com.arogyavarta.console.service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
-import com.arogyavarta.console.DTO.ConsentNameDTO;
+import com.arogyavarta.console.dto.ConsentNameDTO;
+import com.arogyavarta.console.entity.*;
+import com.arogyavarta.console.repo.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.arogyavarta.console.DTO.ConsultationDTO;
+import com.arogyavarta.console.dto.ConsultationDTO;
 import com.arogyavarta.console.config.Constants;
-import com.arogyavarta.console.entity.Consent;
-import com.arogyavarta.console.entity.Consultation;
-import com.arogyavarta.console.entity.Doctor;
-import com.arogyavarta.console.entity.Patient;
-import com.arogyavarta.console.entity.UserType;
-import com.arogyavarta.console.repo.ConsentRepository;
-import com.arogyavarta.console.repo.ConsultationRepository;
-import com.arogyavarta.console.repo.DoctorRepository;
-import com.arogyavarta.console.repo.PatientRepository;
 
 import jakarta.transaction.Transactional;
 
@@ -36,6 +31,8 @@ public class ConsultationService {
 
     @Autowired
     private ConsentRepository consentRepository;
+    @Autowired
+    private CredentialsRepository credentialRepository;
 
     @Transactional
     public Consultation createConsultation(ConsultationDTO consultationDTO) {
@@ -94,15 +91,32 @@ public class ConsultationService {
 
     }
 
-
-    public List<ConsentNameDTO> getGivenConsent(Long consultationId) {
-        List<Consent> consent = consentRepository.findAllByUserIdAndConsultationId(consultationId);
-        return consent.stream().map(this::mapComsentToConsentNameDTO).collect(Collectors.toList());
+    public List<ConsentNameDTO> getGivenConsent(Long consultationId, Long userId) {
+        Optional<Consent> consents=consentRepository.findByConsultationIdAndUserId(consultationId,userId);
+        if(consents.isEmpty()) return new ArrayList<>();
+        Credentials credentials=credentialRepository.findUserById(userId);
+        UserType userType=credentials.getUserType();
+        if(userType.equals(UserType.DOCTOR)){
+            List<Consent> consent = consentRepository.findAllByUserIdAndConsultationIdNotDoctor(consultationId,userId);
+            return consent.stream().map(this::mapConsentToConsentNameDTO).collect(Collectors.toList());
+        }
+        List<Consultation> consultation = consultationRepository.findAllDoctorByConsultationId(consultationId);
+        return consultation.stream().map(this::mapDoctorToConsentNameDTO).collect(Collectors.toList());
     }
-    private ConsentNameDTO mapComsentToConsentNameDTO(Consent consent) {
+    private ConsentNameDTO mapConsentToConsentNameDTO(Consent consent) {
         ConsentNameDTO consentNameDTO = new ConsentNameDTO();
         consentNameDTO.setGivenConsent(consent.getGivenConsent());
+        consentNameDTO.setUserType(consent.getUserType().name());
+        consentNameDTO.setName(consent.getUser().getName());
         consentNameDTO.setUserId(consent.getUser().getUserId());
+        return consentNameDTO;
+    }
+    private ConsentNameDTO mapDoctorToConsentNameDTO(Consultation consultation) {
+        ConsentNameDTO consentNameDTO = new ConsentNameDTO();
+        consentNameDTO.setGivenConsent(Boolean.TRUE);
+        consentNameDTO.setUserType(UserType.DOCTOR.name());
+        consentNameDTO.setName(consultation.getDoctor().getName());
+        consentNameDTO.setUserId(consultation.getDoctor().getUserId());
         return consentNameDTO;
     }
 }

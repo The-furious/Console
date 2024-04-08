@@ -15,4 +15,6 @@ public interface ConsultationRepository extends JpaRepository<Consultation, Long
     List<Consultation> findByConsultationIdInAndEndDateAfter(List<String> consentIds, LocalDateTime currentDate);
     @Query(value = "SELECT patient_id FROM consultation WHERE consultation_id = ?1", nativeQuery = true)
     Long findByConsultationId(Long consultancyId);
+
+    List<Consultation> findAllDoctorByConsultationId(Long consultationId);
 }
