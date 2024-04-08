@@ -4,8 +4,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.arogyavarta.console.DTO.ConsentDTO;
-import com.arogyavarta.console.DTO.RadiologistSearchDTO;
+import com.arogyavarta.console.dto.ConsentDTO;
+import com.arogyavarta.console.dto.RadiologistSearchDTO;
 import com.arogyavarta.console.config.Constants;
 import com.arogyavarta.console.entity.*;
 import com.arogyavarta.console.repo.*;
@@ -14,7 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.arogyavarta.console.DTO.DoctorDTO;
+import com.arogyavarta.console.dto.DoctorDTO;
 
 import jakarta.transaction.Transactional;
 

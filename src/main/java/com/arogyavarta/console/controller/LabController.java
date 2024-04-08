@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.arogyavarta.console.DTO.LabHistoryDTO;
-import com.arogyavarta.console.DTO.LabUploadDTO;
+import com.arogyavarta.console.dto.LabHistoryDTO;
+import com.arogyavarta.console.dto.LabUploadDTO;
 import com.arogyavarta.console.entity.Tests;
 import com.arogyavarta.console.service.LabService;
 import com.arogyavarta.console.service.TestService;

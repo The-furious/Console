@@ -1,9 +1,9 @@
-package com.arogyavarta.console.DTO;
+package com.arogyavarta.console.dto;
 
 import lombok.Data;
 
 @Data
-public class DoctorDTO {
+public class AdminDTO {
     private String name;
     private String email;
     private String profilePhotoUrl;
@@ -11,6 +11,4 @@ public class DoctorDTO {
     private String address;
     private String username;
     private String password;
-    private String specialty;
-    private String registrationNumber;
 }

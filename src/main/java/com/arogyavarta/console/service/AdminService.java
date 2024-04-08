@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.arogyavarta.console.DTO.AdminDTO;
+import com.arogyavarta.console.dto.AdminDTO;
 import com.arogyavarta.console.entity.Admin;
 import com.arogyavarta.console.entity.Credentials;
 import com.arogyavarta.console.entity.UserType;

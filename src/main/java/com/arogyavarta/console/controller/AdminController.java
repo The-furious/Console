@@ -10,10 +10,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.arogyavarta.console.DTO.AdminDTO;
-import com.arogyavarta.console.DTO.DoctorDTO;
-import com.arogyavarta.console.DTO.LabDTO;
-import com.arogyavarta.console.DTO.RadiologistDTO;
+import com.arogyavarta.console.dto.AdminDTO;
+import com.arogyavarta.console.dto.DoctorDTO;
+import com.arogyavarta.console.dto.LabDTO;
+import com.arogyavarta.console.dto.RadiologistDTO;
 import com.arogyavarta.console.entity.Doctor;
 import com.arogyavarta.console.entity.Lab;
 import com.arogyavarta.console.entity.Radiologist;

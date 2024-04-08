@@ -1,4 +1,4 @@
-package com.arogyavarta.console.DTO;
+package com.arogyavarta.console.dto;
 
 import lombok.*;
 

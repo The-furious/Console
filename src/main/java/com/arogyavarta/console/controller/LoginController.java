@@ -7,10 +7,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.arogyavarta.console.DTO.ChangePasswordRequest;
-import com.arogyavarta.console.DTO.LoginReqDTO;
-import com.arogyavarta.console.DTO.LoginRes;
-import com.arogyavarta.console.DTO.OTPRequestDTO;
+import com.arogyavarta.console.dto.ChangePasswordRequest;
+import com.arogyavarta.console.dto.LoginReqDTO;
+import com.arogyavarta.console.dto.LoginRes;
+import com.arogyavarta.console.dto.OTPRequestDTO;
 import com.arogyavarta.console.service.LoginService;
 
 @RestController
@@ -20,7 +20,7 @@ public class LoginController {
     private LoginService loginService;
 
     @PostMapping("/login")
-    public ResponseEntity<LoginRes> AuthenticateAndGetToken(@RequestBody LoginReqDTO req) {
+    public ResponseEntity<LoginRes> authenticateAndGetToken(@RequestBody LoginReqDTO req) {
         return ResponseEntity.ok(loginService.logIn(req));
     }
 

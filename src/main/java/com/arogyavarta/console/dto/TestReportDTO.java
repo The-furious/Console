@@ -1,16 +1,17 @@
-package com.arogyavarta.console.DTO;
+package com.arogyavarta.console.dto;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import lombok.Builder;
 import lombok.Data;
 
-@Builder
 @Data
-public class LabHistoryDTO {
+@Builder
+public class TestReportDTO {
     private String testName;
     private String remarks;
     private LocalDateTime testDate;
     private Long consultationId;
-    private String patientName;
+    private List<ImageDTO> images;
 }

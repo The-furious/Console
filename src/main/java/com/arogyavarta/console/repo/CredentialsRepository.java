@@ -8,4 +8,6 @@ import com.arogyavarta.console.entity.Credentials;
 
 public interface CredentialsRepository extends JpaRepository<Credentials, Long> {
     Optional<Credentials> findByUsername(String username);
+
+    Credentials findUserById(Long userId);
 }

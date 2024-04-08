@@ -1,7 +1,7 @@
 package com.arogyavarta.console.controller;
 
 
-import com.arogyavarta.console.DTO.RadiologistSearchDTO;
+import com.arogyavarta.console.dto.RadiologistSearchDTO;
 import com.arogyavarta.console.service.DoctorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
