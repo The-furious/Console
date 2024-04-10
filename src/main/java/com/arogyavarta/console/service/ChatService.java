@@ -44,7 +44,7 @@ public class ChatService {
 
 
     public List<Chat> findChatMessages(Long consultationId, Long senderId, Long recipientId) {
-        List<Chat> chatMessages = chatRepository.findAllByConsultation_ConsultationIdAndSender_UserIdAndRecipient_UserIdOrderByTimestampAsc(consultationId, senderId, recipientId);
+        List<Chat> chatMessages = chatRepository.findChats(consultationId, senderId, recipientId);
         for (Chat chat : chatMessages) {
             chat.setReceived(true);
         }
