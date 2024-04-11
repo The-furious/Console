@@ -12,4 +12,5 @@ public class ConsentNameDTO {
     private String name;
     private Long userId;
     private String userType;
+    private Long unreadMessages;
 }

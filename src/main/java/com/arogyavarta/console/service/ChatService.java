@@ -52,5 +52,10 @@ public class ChatService {
 
         return chatMessages; 
     }
+
+    public Long findUnreadMessages(Long consultationId, Long senderId, Long recipientId)
+    {
+        return chatRepository.findUnreadMessages(consultationId, senderId, recipientId);
+    }
     
 }
