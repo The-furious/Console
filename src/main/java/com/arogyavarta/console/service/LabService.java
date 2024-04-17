@@ -88,28 +88,35 @@ public class LabService {
         }
         Lab lab = labRepository.findById(uploadDTO.getLabId()).orElseThrow();
 
-        // giving consent to lab (can think of better approch)
-        Consent consent = Consent.builder()
-                                 .userType(UserType.LAB)
-                                 .consentDate(LocalDateTime.now())
-                                 .givenConsent(true)
-                                 .user(lab)
-                                 .consultation(consultation.get())
-                                 .build();
-        consentRepository.save(consent);
+        Tests existingTest = testsRepository.findTopByConsultationConsultationId(uploadDTO.getConsultationId());
+        if (existingTest!=null && existingTest.getLab().getUserId()!=uploadDTO.getLabId()) {
+            return String.format("Error: Test is already done by lab with labId: %d and name: %s",
+                                 existingTest.getLab().getUserId(), existingTest.getLab().getName());
+        }
+        if (existingTest==null) {
+            // giving consent to lab (can think of better approch)
+            Consent consent = Consent.builder()
+            .userType(UserType.LAB)
+            .consentDate(LocalDateTime.now())
+            .givenConsent(true)
+            .user(lab)
+            .consultation(consultation.get())
+            .build();
+            consentRepository.save(consent);
 
-        Tests test = Tests.builder()
-                        .remarks(uploadDTO.getRemarks())
-                        .testName(uploadDTO.getTestName())
-                        .consultation(consultation.get())
-                        .testDate(LocalDateTime.now())
-                        .lab(lab)
-                        .build();
-        test = testsRepository.save(test);
+            Tests test = Tests.builder()
+            .remarks(uploadDTO.getRemarks())
+            .testName(uploadDTO.getTestName())
+            .consultation(consultation.get())
+            .testDate(LocalDateTime.now())
+            .lab(lab)
+            .build();
+            existingTest = testsRepository.save(test);
+        }
 
         for (MultipartFile file : uploadDTO.getFiles()) {
             String fileName = storageUtil.uploadFile(file);
-            Images image = Images.builder().tests(test).imageUrl(fileName).build();
+            Images image = Images.builder().tests(existingTest).imageUrl(fileName).build();
             imagesRepository.save(image);
         }
         
