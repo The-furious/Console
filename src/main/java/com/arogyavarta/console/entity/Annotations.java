@@ -1,6 +1,6 @@
 package com.arogyavarta.console.entity;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -39,10 +39,8 @@ public class Annotations {
     private String impressionText;
 
     @Column(name = "annotation_date")
-    private Date annotationDate;
+    private LocalDateTime annotationDate;
 
     @Column(name = "edited_image_url")
     private String editedImageUrl;
-
-    // Getters and setters
 }

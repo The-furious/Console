@@ -32,15 +32,14 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity.csrf(AbstractHttpConfigurer::disable)
                 .cors(Customizer.withDefaults())
-                .authorizeHttpRequests(request -> request.requestMatchers("/auth/**", "/public/**", "/swagger-ui/**", "/v3/**", "/patient/createPatient", "/**").permitAll()
-                        .requestMatchers("/admin/getAllDoctors/**", "/admin/getAllRadiologist/**").hasAnyAuthority("DOCTOR", "RADIOLOGIST", "ADMIN")
+                .authorizeHttpRequests(request -> request.requestMatchers("/auth/**", "/public/**", "/swagger-ui/**", "/v3/**", "/patient/createPatient").permitAll()
+                        .requestMatchers("/admin/getAllDoctors/**", "/admin/getAllRadiologist/**", "/patient/{id}/**").hasAnyAuthority("DOCTOR", "RADIOLOGIST", "ADMIN")
+                        .requestMatchers("/annotations/**").hasAnyAuthority("DOCTOR", "RADIOLOGIST")
                         .requestMatchers("/admin/**").hasAnyAuthority("ADMIN")
                         .requestMatchers("/doctor/**").hasAnyAuthority("DOCTOR")
                         .requestMatchers("/radiologist/**").hasAnyAuthority("RADIOLOGIST")
                         .requestMatchers("/patient/**").hasAnyAuthority("PATIENT")
                         .requestMatchers("/lab/**").hasAnyAuthority("LAB")
-                        //.requestMatchers("/patient/{id}/**").hasAnyAuthority("DOCTOR", "RADIOLOGIST")
-                        // .requestMatchers("/radiologist/**").hasAnyAuthority("USER", "ADMIN")
                         .anyRequest().authenticated())
                 .sessionManagement(manager -> manager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider()).addFilterBefore(
