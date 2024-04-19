@@ -15,6 +15,7 @@ import com.arogyavarta.console.dto.ChatMessageDTO;
 import com.arogyavarta.console.dto.ChatResponseDTO;
 import com.arogyavarta.console.entity.Chat;
 import com.arogyavarta.console.service.ChatService;
+import com.arogyavarta.console.utils.ObjectEncryptionUtility;
 
 import lombok.RequiredArgsConstructor;
 
@@ -26,7 +27,7 @@ public class ChatController {
     private final ChatService chatService;
 
     @MessageMapping("/chat")
-    public void processMessage(@Payload ChatMessageDTO chatMessage) {
+    public void processMessage(@Payload ChatMessageDTO chatMessage) throws Exception{
         chatService.save(chatMessage);
         messagingTemplate.convertAndSendToUser(
                 chatMessage.getRecipientId().toString(), "/queue/messages",
@@ -39,14 +40,15 @@ public class ChatController {
 
     @GetMapping("/messages/{consultationId}/{senderId}/{recipientId}")
     public ResponseEntity<List<ChatResponseDTO>> findChatMessages(@PathVariable Long consultationId, 
-                                                       @PathVariable Long senderId, 
-                                                       @PathVariable Long recipientId) {
+                                                    @PathVariable Long senderId, 
+                                                    @PathVariable Long recipientId){
         List<Chat> chats = chatService.findChatMessages(consultationId, senderId, recipientId);
         return ResponseEntity.ok(chats.stream().map(this::convertToChatResponseDTO).collect(Collectors.toList()));
     }
 
-    private ChatResponseDTO convertToChatResponseDTO(Chat chat) {
-        return ChatResponseDTO.builder()
+
+    private ChatResponseDTO convertToChatResponseDTO(Chat chat){
+        ChatResponseDTO chatResponseDTO =  ChatResponseDTO.builder()
                 .chatId(chat.getChatId())
                 .consultationId(chat.getConsultation().getConsultationId())
                 .senderId(chat.getSender().getUserId())
@@ -54,5 +56,11 @@ public class ChatController {
                 .content(chat.getContent())
                 .timestamp(chat.getTimestamp())
                 .build();
+        try {
+            ObjectEncryptionUtility.decryptStringFields(chatResponseDTO);
+        } catch (Exception e) {
+            return null; 
+        }
+        return chatResponseDTO;
     }
 }

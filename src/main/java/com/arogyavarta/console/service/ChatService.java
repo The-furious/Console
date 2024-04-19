@@ -13,6 +13,7 @@ import com.arogyavarta.console.entity.User;
 import com.arogyavarta.console.repo.ChatRepository;
 import com.arogyavarta.console.repo.ConsultationRepository;
 import com.arogyavarta.console.repo.UserRepository;
+import com.arogyavarta.console.utils.ObjectEncryptionUtility;
 
 @Service
 public class ChatService {
@@ -26,7 +27,7 @@ public class ChatService {
     @Autowired
     private ConsultationRepository consultationRepository;
 
-    public void save(ChatMessageDTO chatMessageDTO) {
+    public void save(ChatMessageDTO chatMessageDTO) throws Exception{
         User sender = userRepository.findById(chatMessageDTO.getSenderId()).orElseThrow(() -> new IllegalArgumentException("Sender not found"));
         User recipient = userRepository.findById(chatMessageDTO.getRecipientId()).orElseThrow(() -> new IllegalArgumentException("Recipient not found"));
 
@@ -39,6 +40,7 @@ public class ChatService {
         chat.setContent(chatMessageDTO.getContent());
         chat.setReceived(false);
         chat.setTimestamp(LocalDateTime.now());
+        ObjectEncryptionUtility.encryptStringFields(chat);
         chatRepository.save(chat);
     }
 

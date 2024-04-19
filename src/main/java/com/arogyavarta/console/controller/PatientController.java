@@ -1,6 +1,7 @@
 package com.arogyavarta.console.controller;
 
-import com.arogyavarta.console.dto.NonConsentDTO;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,11 +11,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.arogyavarta.console.dto.NonConsentDTO;
 import com.arogyavarta.console.dto.PatientDTO;
 import com.arogyavarta.console.entity.Patient;
 import com.arogyavarta.console.service.PatientService;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/patient")
@@ -23,13 +23,13 @@ public class PatientController {
     private PatientService patientService;
 
     @PostMapping("/createPatient")
-    public ResponseEntity<String> createPatient(@RequestBody PatientDTO patientDTO) {
+    public ResponseEntity<String> createPatient(@RequestBody PatientDTO patientDTO) throws Exception{
         patientService.createPatient(patientDTO);
         return ResponseEntity.ok("Patient created successfully");
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Patient> getPatientById(@PathVariable("id") Long id) {
+    public ResponseEntity<Patient> getPatientById(@PathVariable("id") Long id) throws Exception{
         Patient patient = patientService.getPatientById(id);
         return ResponseEntity.ok(patient);
     }
