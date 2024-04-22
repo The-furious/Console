@@ -1,24 +1,29 @@
 package com.arogyavarta.console.service;
 
-import com.arogyavarta.console.dto.NonConsentDTO;
-import com.arogyavarta.console.entity.*;
-import com.arogyavarta.console.repo.ConsentRepository;
-import com.arogyavarta.console.repo.ConsultationRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
-
-import com.arogyavarta.console.dto.PatientDTO;
-import com.arogyavarta.console.repo.CredentialsRepository;
-import com.arogyavarta.console.repo.PatientRepository;
-
-import jakarta.persistence.EntityNotFoundException;
-import jakarta.transaction.Transactional;
-
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+
+import com.arogyavarta.console.dto.NonConsentDTO;
+import com.arogyavarta.console.dto.PatientDTO;
+import com.arogyavarta.console.entity.Consent;
+import com.arogyavarta.console.entity.Consultation;
+import com.arogyavarta.console.entity.Credentials;
+import com.arogyavarta.console.entity.Patient;
+import com.arogyavarta.console.entity.UserType;
+import com.arogyavarta.console.repo.ConsentRepository;
+import com.arogyavarta.console.repo.ConsultationRepository;
+import com.arogyavarta.console.repo.CredentialsRepository;
+import com.arogyavarta.console.repo.PatientRepository;
+import com.arogyavarta.console.utils.ObjectEncryptionUtility;
+
+import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 
 @Service
 public class PatientService {
@@ -39,7 +44,7 @@ public class PatientService {
     private ConsentRepository consentRepository;
 
     @Transactional
-    public void createPatient(PatientDTO patientDTO) {
+    public void createPatient(PatientDTO patientDTO) throws Exception{
         Patient patient = new Patient();
         patient.setName(patientDTO.getName());
         patient.setEmail(patientDTO.getEmail());
@@ -56,6 +61,8 @@ public class PatientService {
         patient.setUserType(UserType.PATIENT);
         patient.setPincode(patientDTO.getPincode());
 
+        ObjectEncryptionUtility.encryptStringFields(patient);
+        
         patientRepository.save(patient);
 
 
@@ -68,9 +75,11 @@ public class PatientService {
         credentialsRepository.save(credentials);
     }
 
-    public Patient getPatientById(Long patientId) {
-        return patientRepository.findById(patientId)
+    public Patient getPatientById(Long patientId) throws Exception{
+        Patient patient =  patientRepository.findById(patientId)
                 .orElseThrow(() -> new EntityNotFoundException("Patient not found with id: " + patientId));
+        ObjectEncryptionUtility.decryptStringFields(patient);
+        return patient;
     }
 
     public List<NonConsentDTO> getAllUngivenConsents(Long userId) {

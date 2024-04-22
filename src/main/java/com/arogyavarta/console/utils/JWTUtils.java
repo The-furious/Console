@@ -9,16 +9,21 @@ import java.util.function.Function;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import com.arogyavarta.console.config.Constants;
+import com.arogyavarta.console.service.BlacklistService;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 
 @Component
 public class JWTUtils {
+
+    @Autowired
+    private BlacklistService blacklistService;
 
     private SecretKey Key;
     private  static  final long EXPIRATION_TIME = Constants.JWT_EXPIRATION_TIME; 
@@ -55,6 +60,7 @@ public class JWTUtils {
 
     public boolean isTokenValid(String token, UserDetails userDetails){
         final String username = extractUsername(token);
+        if(blacklistService.isBlacklisted(token)) return false;
         return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
     }
     public boolean isTokenExpired(String token){

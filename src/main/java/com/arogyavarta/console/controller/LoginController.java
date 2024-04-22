@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -11,6 +12,7 @@ import com.arogyavarta.console.dto.ChangePasswordRequest;
 import com.arogyavarta.console.dto.LoginReqDTO;
 import com.arogyavarta.console.dto.LoginRes;
 import com.arogyavarta.console.dto.OTPRequestDTO;
+import com.arogyavarta.console.service.BlacklistService;
 import com.arogyavarta.console.service.LoginService;
 
 @RestController
@@ -18,6 +20,9 @@ import com.arogyavarta.console.service.LoginService;
 public class LoginController {
     @Autowired
     private LoginService loginService;
+
+    @Autowired
+    private BlacklistService blacklistService;
 
     @PostMapping("/login")
     public ResponseEntity<LoginRes> authenticateAndGetToken(@RequestBody LoginReqDTO req) {
@@ -47,6 +52,12 @@ public class LoginController {
         } else {
             return ResponseEntity.badRequest().body("Invalid Username or OTP expired.");
         }
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<String> logout(@RequestHeader("Authorization") String token) {
+        blacklistService.addToBlacklist(token.substring(7));
+        return ResponseEntity.ok("Logged out successfully");
     }
 
 }
