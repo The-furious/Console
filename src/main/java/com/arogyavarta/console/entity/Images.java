@@ -31,4 +31,7 @@ public class Images {
 
     @Column(name = "image_url")
     private String imageUrl;
+
+    @Column(name = "image_url_jpg")
+    private String imageUrlJpg;
 }

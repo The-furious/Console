@@ -30,6 +30,7 @@ public class ImageService {
         return ImageDTO.builder()
                         .id(image.getImageId())
                         .imageUrl(storageUtil.generatePresignedUrl(image.getImageUrl()))
+                        .imageUrlDCM(storageUtil.generatePresignedUrl(image.getImageUrlJpg()))
                         .build();
     }
 
