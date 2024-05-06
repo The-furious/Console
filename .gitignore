@@ -35,6 +35,5 @@ build/
 
 src/main/resources/keystore.p12
 src/main/resources/application.properties
-src/main/java/com/arogyavarta/console/config/SecurityConfig.java
 src/main/java/com/arogyavarta/console/config/Constants.java
 
