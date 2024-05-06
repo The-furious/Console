@@ -1,5 +1,6 @@
 package com.arogyavarta.console.controller;
 
+import java.net.URL;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +22,7 @@ import com.arogyavarta.console.service.AdminService;
 import com.arogyavarta.console.service.DoctorService;
 import com.arogyavarta.console.service.LabService;
 import com.arogyavarta.console.service.RadiologistService;
-import com.arogyavarta.console.utils.EmailUtility;
+import com.arogyavarta.console.utils.StorageUtil;
 
 @RestController
 @RequestMapping("/admin")
@@ -34,6 +35,8 @@ public class AdminController {
     private LabService labService;
     @Autowired
     private RadiologistService radiologistService;
+    @Autowired
+    private StorageUtil storageUtil;
 
     // @GetMapping("/getAllUser")
     // public ResponseEntity<List<UserLogin>> getAllUser(){
@@ -41,9 +44,15 @@ public class AdminController {
     // }
 
     @GetMapping("/sayHello")
-    public String sayHello(){
-        EmailUtility.sendEmail("stsiyer@gmail.com", "Test", "Email is working!");
-        return "Hello World!";
+    public void sayHello() throws Exception{
+        //PDFGenerator.generateReport("report.pdf");
+        //return storageUtil.generatePresignedUrl("1714666807958_0002.DCM");
+        //return storageUtil.generatePresignedUrl("1712419201194_download.jpeg.DCM");
+    }
+
+    @GetMapping("/sayHello1")
+    public URL sayHello1() throws Exception{
+        return storageUtil.generatePresignedUrl("1711796322190_download.jpeg");
     }
 
     @PostMapping("/createAdmin")
