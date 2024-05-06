@@ -64,23 +64,26 @@ public class PDFGenerator {
             addContent(document, "Patient Name : ", consultation.getPatient().getName(), fieldStyle, valueStyle);
             addContent(document, "Doctor Name : ", consultation.getDoctor().getName(), fieldStyle, valueStyle);
             addContent(document, "Doctor Number : ", consultation.getDoctor().getContactNumber(), fieldStyle, valueStyle);
-            addContent(document, "Lab Name : ", consultation.getDoctor().getContactNumber(), fieldStyle, valueStyle);
+            addContent(document, "Lab Name : ", test.getLab().getName(), fieldStyle, valueStyle);
 
             // Add doctor remarks
-            addSection(document, "Doctor Remarks", headingStyle);
-            addContent(document, "", prescription.getImpression(), valueStyle, valueStyle);
+            if (prescription.getImpression()!=null) {
+                addSection(document, "Doctor Remarks", headingStyle);
+                addContent(document, "", prescription.getImpression(), valueStyle, valueStyle);    
+            }
 
             // Add prescription
-            addSection(document, "Prescription", headingStyle);
-            addContent(document, "", prescription.getPrescriptions(), valueStyle, valueStyle);
+            if (prescription.getPrescriptions()!=null) {
+                addSection(document, "Prescription", headingStyle);
+                addContent(document, "", prescription.getPrescriptions(), valueStyle, valueStyle);    
+            }
 
             // Add Test Details
             addSection(document, "Test Details", headingStyle);
-            addContent(document, "Test Name :", test.getTestName(), fieldStyle, valueStyle);
+            addContent(document, "Test Name :", test.getTestName()==null?"":test.getTestName(), fieldStyle, valueStyle);
             addContent(document, "Test Id :", test.getTestId().toString(), fieldStyle, valueStyle);
             for (ImageDTO image : images) {
                 addImage(document, image.getImageUrl());
-
             }
 
             // Close the document
