@@ -24,6 +24,7 @@ import com.arogyavarta.console.repo.CredentialsRepository;
 import com.arogyavarta.console.repo.ImagesRepository;
 import com.arogyavarta.console.repo.LabRepository;
 import com.arogyavarta.console.repo.TestsRepository;
+import com.arogyavarta.console.utils.DicomToJpgConverter;
 import com.arogyavarta.console.utils.StorageUtil;
 
 import jakarta.transaction.Transactional;
@@ -81,7 +82,7 @@ public class LabService {
     }
 
     @Transactional
-    public String upload(LabUploadDTO uploadDTO) {
+    public String upload(LabUploadDTO uploadDTO) throws Exception{
         Optional<Consultation> consultation = consultationRepository.findById(uploadDTO.getConsultationId());
         if (!consultation.isPresent() && consultation.get().getEndDate().isBefore(LocalDateTime.now())) {
             return "Error: consultation Id does not exist";
@@ -115,8 +116,10 @@ public class LabService {
         }
 
         for (MultipartFile file : uploadDTO.getFiles()) {
+            MultipartFile jpgFile = DicomToJpgConverter.convertDicomToJpg(file);
+            String jpgFileName = storageUtil.uploadFile(jpgFile);
             String fileName = storageUtil.uploadFile(file);
-            Images image = Images.builder().tests(existingTest).imageUrl(fileName).build();
+            Images image = Images.builder().tests(existingTest).imageUrl(fileName).imageUrlJpg(jpgFileName).build();
             imagesRepository.save(image);
         }
         

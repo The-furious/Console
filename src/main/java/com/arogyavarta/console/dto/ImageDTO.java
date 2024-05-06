@@ -10,4 +10,5 @@ import lombok.Data;
 public class ImageDTO {
     private Long id;
     private URL imageUrl;
+    private URL imageUrlDCM;
 }

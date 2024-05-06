@@ -1,19 +1,43 @@
 package com.arogyavarta.console.service;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import com.arogyavarta.console.dto.ConsentNameDTO;
-import com.arogyavarta.console.entity.*;
-import com.arogyavarta.console.repo.*;
+import javax.mail.MessagingException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
-import com.arogyavarta.console.dto.ConsultationDTO;
 import com.arogyavarta.console.config.Constants;
+import com.arogyavarta.console.dto.ConsentNameDTO;
+import com.arogyavarta.console.dto.ConsultationDTO;
+import com.arogyavarta.console.dto.EndConsultationDTO;
+import com.arogyavarta.console.dto.ImageDTO;
+import com.arogyavarta.console.entity.Consent;
+import com.arogyavarta.console.entity.Consultation;
+import com.arogyavarta.console.entity.Credentials;
+import com.arogyavarta.console.entity.Doctor;
+import com.arogyavarta.console.entity.Images;
+import com.arogyavarta.console.entity.Patient;
+import com.arogyavarta.console.entity.Prescription;
+import com.arogyavarta.console.entity.Tests;
+import com.arogyavarta.console.entity.UserType;
+import com.arogyavarta.console.repo.ConsentRepository;
+import com.arogyavarta.console.repo.ConsultationRepository;
+import com.arogyavarta.console.repo.CredentialsRepository;
+import com.arogyavarta.console.repo.DoctorRepository;
+import com.arogyavarta.console.repo.ImagesRepository;
+import com.arogyavarta.console.repo.PatientRepository;
+import com.arogyavarta.console.repo.PrescriptionRepository;
+import com.arogyavarta.console.repo.TestsRepository;
+import com.arogyavarta.console.utils.EmailUtility;
+import com.arogyavarta.console.utils.PDFGenerator;
+import com.arogyavarta.console.utils.StorageUtil;
 
 import jakarta.transaction.Transactional;
 
@@ -31,8 +55,21 @@ public class ConsultationService {
 
     @Autowired
     private ConsentRepository consentRepository;
+
     @Autowired
     private CredentialsRepository credentialRepository;
+
+    @Autowired
+    private PrescriptionRepository prescriptionRepository;
+
+    @Autowired
+    private ImagesRepository imagesRepository;
+
+    @Autowired
+    private TestsRepository testsRepository;
+
+    @Autowired
+    private StorageUtil storageUtil;
 
     @Transactional
     public Consultation createConsultation(ConsultationDTO consultationDTO) {
@@ -118,5 +155,58 @@ public class ConsultationService {
         consentNameDTO.setName(consultation.getDoctor().getName());
         consentNameDTO.setUserId(consultation.getDoctor().getUserId());
         return consentNameDTO;
+    }
+
+    @Transactional
+    public Consultation endConsultation(EndConsultationDTO endConsultationDTO) {
+        Consultation currConsultation = consultationRepository.findById(endConsultationDTO.getConsultationId()).orElseThrow();
+        if (currConsultation.getEndDate().isBefore(LocalDateTime.now())) {
+            return currConsultation;
+        }
+        Prescription prescription = Prescription.builder().consultation(currConsultation)
+                                                          .impression(endConsultationDTO.getImpression())
+                                                          .prescriptions(endConsultationDTO.getPrescription())
+                                                          .build();
+        prescriptionRepository.save(prescription);
+        currConsultation.setEndDate(LocalDateTime.now());
+        consultationRepository.save(currConsultation);
+
+        // generate report
+        MultipartFile file = generateReport(currConsultation, prescription);
+        
+        // sent mail
+        String subject = Constants.END_CONSULTATION_SUBJECT;
+        String body = Constants.END_CONSULTATION_BODY;
+        body = body.replace("$patient_name", currConsultation.getPatient().getName())
+             .replace("$doctor_name", currConsultation.getDoctor().getName());
+        try {
+            EmailUtility.sendReport(currConsultation.getPatient().getEmail(), subject, body, file);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        }
+        return currConsultation;
+    }
+
+    private ImageDTO convertImagesToImageDTO(Images image)
+    {
+        return ImageDTO.builder()
+                        .id(image.getImageId())
+                        .imageUrl(storageUtil.generatePresignedUrl(image.getImageUrl()))
+                        .build();
+    }
+
+    private MultipartFile generateReport(Consultation currConsultation, Prescription prescription)
+    {
+        Tests test = testsRepository.findTopByConsultationConsultationId(currConsultation.getConsultationId());
+        List<Images> images = imagesRepository.findByTestsTestId(test.getTestId());
+        List<ImageDTO> imageDTO = images.stream().map(t-> convertImagesToImageDTO(t)).collect(Collectors.toList());
+        return PDFGenerator.generateReport(currConsultation, prescription, test, imageDTO, "report.pdf");
+    }
+    public MultipartFile getReport(Long consultationId) {
+        Consultation consultation = consultationRepository.findById(consultationId).orElseThrow();
+        Prescription prescription = prescriptionRepository.findByConsultation_ConsultationId(consultationId);
+        return generateReport(consultation, prescription);
     }
 }

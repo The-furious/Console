@@ -1,5 +1,6 @@
 package com.arogyavarta.console.controller;
 
+import java.io.IOException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.arogyavarta.console.dto.ConsentNameDTO;
 import com.arogyavarta.console.dto.ConsultationDTO;
+import com.arogyavarta.console.dto.EndConsultationDTO;
 import com.arogyavarta.console.dto.TestReportDTO;
 import com.arogyavarta.console.entity.Consultation;
 import com.arogyavarta.console.service.ChatService;
@@ -61,5 +63,18 @@ public class ConsultationController {
         List<ConsentNameDTO> givenconsent = consultationService.getGivenConsent(consultationId,userId);
         givenconsent.forEach(c -> c.setUnreadMessages(chatService.findUnreadMessages(consultationId, c.getUserId(), userId)));
         return ResponseEntity.ok(givenconsent);
+    }
+
+    @PostMapping("/endConsultation")
+    public ResponseEntity<Consultation> endConsultation(@RequestBody EndConsultationDTO endConsultationDTO){
+        Consultation endConsultation = consultationService.endConsultation(endConsultationDTO);
+        return ResponseEntity.ok(endConsultation);
+    }
+    @GetMapping("generateReport/{consultationId}")
+    public ResponseEntity<byte[]> generateReport(@PathVariable Long consultationId) throws IOException {
+        byte[] reportBytes = consultationService.getReport(consultationId).getBytes();
+        return ResponseEntity.ok()
+                .header("Content-Disposition", "attachment; filename=report.pdf")
+                .body(reportBytes);
     }
 }
