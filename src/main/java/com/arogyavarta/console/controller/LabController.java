@@ -33,7 +33,7 @@ public class LabController {
     private StorageUtil service;
 
     @PostMapping("/upload")
-    public ResponseEntity<String> upload(LabUploadDTO uploadDTO) {
+    public ResponseEntity<String> upload(LabUploadDTO uploadDTO) throws Exception {
         String res = labService.upload(uploadDTO);
         if (!res.contains("Error")) {
             return ResponseEntity.ok(res);

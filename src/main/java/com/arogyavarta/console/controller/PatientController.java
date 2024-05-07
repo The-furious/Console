@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import com.arogyavarta.console.dto.GiveConsentDTO;
 import com.arogyavarta.console.dto.NonConsentDTO;
 import com.arogyavarta.console.dto.PatientDTO;
 import com.arogyavarta.console.entity.Patient;
@@ -56,6 +57,11 @@ public class PatientController {
 
         patientService.updateProfilePhoto(id,filename);
         return ResponseEntity.ok("Radiologist updated successfully");
+  }
+    @PostMapping("/notification/giveConsent")
+    public ResponseEntity<String> getAllNonConsents(@RequestBody GiveConsentDTO giveConsentDTO){
+        patientService.giveConsent(giveConsentDTO);
+        return ResponseEntity.ok("Success");
     }
 
 }

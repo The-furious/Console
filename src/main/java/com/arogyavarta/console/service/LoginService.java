@@ -73,7 +73,7 @@ public class LoginService {
                     .sentDate(new Date())
                     .build();
         EmailUtility.sendEmail(credentials.getUser().getEmail(),
-                              Constants.OTP_SUBJECT, 
+                              Constants .OTP_SUBJECT,
                               Constants.OTP_BODY + generatedOTP);
         return otpRepo.save(otp);
     }

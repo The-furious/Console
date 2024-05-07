@@ -10,6 +10,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.arogyavarta.console.dto.NonConsentDTO;
+import com.arogyavarta.console.dto.GiveConsentDTO;
 import com.arogyavarta.console.dto.PatientDTO;
 import com.arogyavarta.console.entity.Consent;
 import com.arogyavarta.console.entity.Consultation;
@@ -60,9 +61,10 @@ public class PatientService {
         patient.setCountry(patientDTO.getCountry());
         patient.setUserType(UserType.PATIENT);
         patient.setPincode(patientDTO.getPincode());
+        patient.setUserType(UserType.PATIENT);
 
         ObjectEncryptionUtility.encryptStringFields(patient);
-        
+
         patientRepository.save(patient);
 
 
@@ -114,4 +116,14 @@ public class PatientService {
 
     }
 
+    public void giveConsent(GiveConsentDTO giveConsentDTO) {
+        Consent consent = consentRepository.findByConsultationIdAndUserId(giveConsentDTO.getConsultationId(), giveConsentDTO.getUserId()).orElseThrow();
+        if( giveConsentDTO.getConsentGiven()){
+            consent.setGivenConsent(true);
+            consentRepository.save(consent);
+        }
+        else{
+            consentRepository.delete(consent);
+        }
+    }
 }

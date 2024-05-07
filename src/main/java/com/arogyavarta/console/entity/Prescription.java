@@ -18,20 +18,21 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Table(name = "Images")
-public class Images {
+@Table(name = "Prescription")
+public class Prescription {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "image_id")
-    private Long imageId;
+    @Column(name = "prescription_id")
+    private Long prescriptionId;
 
     @ManyToOne
-    @JoinColumn(name = "test_id")
-    private Tests tests;
+    @JoinColumn(name = "consultation_id")
+    private Consultation consultation;
 
-    @Column(name = "image_url")
-    private String imageUrl;
+    @Column(name = "impression")
+    private String impression;
 
-    @Column(name = "image_url_jpg")
-    private String imageUrlJpg;
+    @Column(name = "prescriptions")
+    private String prescriptions;
+
 }
