@@ -102,6 +102,20 @@ public class PatientService {
         return nonConsentDTO;
     }
 
+    public void  updateProfilePhoto(Long id, String fileName)
+    {
+        Patient patient=patientRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Radiologist not found"));
+        patient.setProfilePhotoUrl(fileName);
+        patientRepository.save(patient);
+    }
+
+    public void updatePatient(PatientDTO patientDTO){
+
+
+
+    }
+
     public void giveConsent(GiveConsentDTO giveConsentDTO) {
         Consent consent = consentRepository.findByConsultationIdAndUserId(giveConsentDTO.getConsultationId(), giveConsentDTO.getUserId()).orElseThrow();
         if( giveConsentDTO.getConsentGiven()){

@@ -126,4 +126,49 @@ public class LabService {
         return "Uploaded";
         
     }
+
+    public LabDTO getLabById(long id){
+        Lab lab = labRepository.findById(id).orElseThrow();
+        LabDTO labDTO=new LabDTO();
+
+        labDTO.setName(lab.getName());
+        labDTO.setEmail(lab.getEmail());
+        labDTO.setProfilePhotoUrl(lab.getProfilePhotoUrl());
+        labDTO.setContactNumber(lab.getContactNumber());
+        labDTO.setAddress(lab.getAddress());
+        labDTO.setAccreditationNumber(lab.getAccreditationNumber());
+
+       return labDTO;
+
+
+    }
+
+    public void updateProfilePhoto(Long id, String filName)
+    {
+        Lab lab=labRepository.findById(id).orElseThrow();
+        lab.setProfilePhotoUrl(filName);
+        labRepository.save(lab);
+    }
+
+    public void updateLab(long id,LabDTO labDTO)
+    {
+        Lab lab=labRepository.findById(id).orElseThrow();
+
+
+        lab.setEmail(labDTO.getEmail());
+        lab.setContactNumber(labDTO.getContactNumber());
+        lab.setAddress(labDTO.getAddress());
+
+
+        labRepository.save(lab);
+
+    }
+    public void deleteLab(long id) {
+        Optional<Lab> optionalLab = labRepository.findById(id);
+        if (optionalLab.isPresent()) {
+            labRepository.delete(optionalLab.get());
+        } else {
+            throw new RuntimeException("Lab not found with id: " + id);
+        }
+    }
 }
