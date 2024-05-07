@@ -32,7 +32,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity.csrf(AbstractHttpConfigurer::disable)
                 .cors(Customizer.withDefaults())
-                .authorizeHttpRequests(request -> request.requestMatchers("/auth/**", "/public/**", "/swagger-ui/**", "/v3/**", "/patient/createPatient").permitAll()
+                .authorizeHttpRequests(request -> request.requestMatchers("/auth/**", "/public/**", "/swagger-ui/**", "/v3/**", "/patient/createPatient","/**").permitAll()
                         .requestMatchers("/auth/logout/**").hasAnyAuthority("DOCTOR", "RADIOLOGIST", "PATIENT", "ADMIN")
                         .requestMatchers("/admin/getAllDoctors/**", "/admin/getAllRadiologist/**", "/patient/{id}/**").hasAnyAuthority("DOCTOR", "RADIOLOGIST", "ADMIN")
                         .requestMatchers("/wss/**").hasAnyAuthority("DOCTOR", "RADIOLOGIST", "PATIENT")

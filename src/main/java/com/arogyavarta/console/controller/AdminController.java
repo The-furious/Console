@@ -1,14 +1,12 @@
 package com.arogyavarta.console.controller;
 
+import java.net.URL;
 import java.util.List;
 
+import com.arogyavarta.console.utils.StorageUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.arogyavarta.console.dto.AdminDTO;
 import com.arogyavarta.console.dto.DoctorDTO;
@@ -22,9 +20,11 @@ import com.arogyavarta.console.service.DoctorService;
 import com.arogyavarta.console.service.LabService;
 import com.arogyavarta.console.service.RadiologistService;
 import com.arogyavarta.console.utils.EmailUtility;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/admin")
+@CrossOrigin(origins = "http://localhost:3000", allowedHeaders = "*")
 public class AdminController {
     @Autowired
     private AdminService adminService;
@@ -34,6 +34,9 @@ public class AdminController {
     private LabService labService;
     @Autowired
     private RadiologistService radiologistService;
+
+    @Autowired
+    private StorageUtil service;
 
     // @GetMapping("/getAllUser")
     // public ResponseEntity<List<UserLogin>> getAllUser(){
@@ -71,17 +74,131 @@ public class AdminController {
 
     @GetMapping("/getAllDoctors")
     public List<Doctor> getAllDoctors() {
-        return doctorService.getAllDoctors();
+        List<Doctor> doctors = doctorService.getAllDoctors();
+
+        for (Doctor doctor : doctors) {
+            if (doctor.getProfilePhotoUrl() != null) {
+                URL profilePhotoUrl = service.generatePresignedUrl(doctor.getProfilePhotoUrl());
+                doctor.setProfilePhotoUrl(profilePhotoUrl.toString());
+            }
+            else{
+                doctor.setProfilePhotoUrl("https://bootdey.com/img/Content/avatar/avatar1.png");
+            }
+        }
+
+        return doctors;
     }
 
     @GetMapping("/getAllLabs")
-    public List<Lab> getAllLab() {
-        return labService.getAllLabs();
+    public List<Lab> getAllLabs() {
+        List<Lab> labs = labService.getAllLabs();
+
+        for (Lab lab : labs) {
+            if (lab.getProfilePhotoUrl() != null) {
+                URL profilePhotoUrl = service.generatePresignedUrl(lab.getProfilePhotoUrl());
+                lab.setProfilePhotoUrl(profilePhotoUrl.toString());
+            }
+            else{
+                lab.setProfilePhotoUrl("https://bootdey.com/img/Content/avatar/avatar1.png");
+            }
+        }
+
+        return labs;
     }
 
+
     @GetMapping("/getAllRadiologist")
-    public List<Radiologist> getAllRadiologist() {
-        return radiologistService.getAllRadiologists();
+    public List<Radiologist> getAllRadiologists() {
+        List<Radiologist> radiologists = radiologistService.getAllRadiologists();
+
+        for (Radiologist radiologist : radiologists) {
+            if (radiologist.getProfilePhotoUrl() != null) {
+                URL profilePhotoUrl = service.generatePresignedUrl(radiologist.getProfilePhotoUrl());
+                radiologist.setProfilePhotoUrl(profilePhotoUrl.toString());
+            }
+            else{
+                radiologist.setProfilePhotoUrl("https://bootdey.com/img/Content/avatar/avatar1.png");
+            }
+        }
+
+        return radiologists;
     }
+
+    @GetMapping("/get/{id}")
+    public AdminDTO getAdminById(@PathVariable long id){
+
+        AdminDTO adminDTO=adminService.getAdminById(id);
+
+        if(adminDTO.getProfilePhotoUrl()!=null){
+            URL profilePhotoUrl=service.generatePresignedUrl(adminDTO.getProfilePhotoUrl());
+            adminDTO.setProfilePhotoUrl(profilePhotoUrl.toString());
+
+
+        }
+
+        return adminDTO;
+
+    }
+
+    @PutMapping("/updateProfilePic/{id}")
+    public ResponseEntity<String> updateAdminProfilePhoto(@PathVariable long id, @RequestParam("file") MultipartFile file ){
+
+        String filename=service.uploadFile(file);
+
+        adminService.updateProfilePhoto(id,filename);
+        return ResponseEntity.ok("Admin updated successfully");
+    }
+
+    @PutMapping("/update/{id}")
+    public ResponseEntity<String> updateAdmin(@PathVariable long id,@RequestBody AdminDTO adminDTO)
+    {
+        adminService.updateAdmin(id,adminDTO);
+        return ResponseEntity.ok("Admin updated successfully");
+
+    }
+    @PutMapping("/updateDoctor/{id}")
+    public ResponseEntity<String> updateDoctor(@PathVariable long id,@RequestBody DoctorDTO doctorDTO)
+    {
+        doctorService.updateDoctor(id,doctorDTO);
+        return ResponseEntity.ok("Doctor updated successfully");
+
+    }
+
+    @PutMapping("/updateRadiologist/{id}")
+    public ResponseEntity<String> updateRadiologist(@PathVariable long id,@RequestBody RadiologistDTO radiologistDTO)
+    {
+       radiologistService.updateRadiologist(id,radiologistDTO);
+        return ResponseEntity.ok("Radiologist updated successfully");
+
+    }
+
+    @PutMapping("/updateLab/{id}")
+    public ResponseEntity<String> updateLab(@PathVariable long id,@RequestBody LabDTO labDTO)
+    {
+        labService.updateLab(id,labDTO);
+        return ResponseEntity.ok("Lab updated successfully");
+
+    }
+
+    @DeleteMapping("/deleteDoctor/{id}")
+    public ResponseEntity<String> deleteDoctor(@PathVariable long id) {
+        doctorService.deleteDoctor(id);
+        return ResponseEntity.ok("Doctor deleted successfully");
+    }
+
+    @DeleteMapping("/deleteRadiologist/{id}")
+    public ResponseEntity<String> deleteRadiologist(@PathVariable long id) {
+        radiologistService.deleteRadiologist(id);
+        return ResponseEntity.ok("Radiologist deleted successfully");
+    }
+
+    @DeleteMapping("/deleteLab/{id}")
+    public ResponseEntity<String> deleteLab(@PathVariable long id) {
+        labService.deleteLab(id);
+        return ResponseEntity.ok("Lab deleted successfully");
+    }
+
+
+
 
 }

@@ -48,4 +48,44 @@ public class AdminService {
                 .build();
         credentialsRepository.save(credentials);
     }
+
+    public AdminDTO getAdminById(long id){
+
+        Admin admin=adminRepository.findById(id).orElseThrow();
+        AdminDTO adminDTO=new AdminDTO();
+        adminDTO.setName(admin.getName());
+        adminDTO.setEmail(admin.getEmail());
+        adminDTO.setProfilePhotoUrl(admin.getProfilePhotoUrl());
+        adminDTO.setContactNumber(admin.getContactNumber());
+        adminDTO.setAddress(admin.getAddress());
+
+        return adminDTO;
+
+
+
+    }
+
+    public void updateProfilePhoto(long id,String filename)
+    {
+        Admin admin=adminRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Admin not found"));
+
+        admin.setProfilePhotoUrl(filename);
+        adminRepository.save(admin);
+    }
+
+    public void updateAdmin(long id,AdminDTO adminDTO){
+
+        Admin admin=adminRepository.findById(id).orElseThrow();
+
+
+        admin.setEmail(adminDTO.getEmail());
+        admin.setContactNumber(adminDTO.getContactNumber());
+        admin.setAddress(adminDTO.getAddress());
+
+
+        adminRepository.save(admin);
+
+
+    }
 }
