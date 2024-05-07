@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.arogyavarta.console.dto.GiveConsentDTO;
 import com.arogyavarta.console.dto.NonConsentDTO;
 import com.arogyavarta.console.dto.PatientDTO;
 import com.arogyavarta.console.entity.Patient;
@@ -38,4 +39,10 @@ public class PatientController {
         List<NonConsentDTO> nonConsentDTO=patientService.getAllUngivenConsents(userId);
         return ResponseEntity.ok(nonConsentDTO);
     }
+    @PostMapping("/notification/giveConsent")
+    public ResponseEntity<String> getAllNonConsents(@RequestBody GiveConsentDTO giveConsentDTO){
+        patientService.giveConsent(giveConsentDTO);
+        return ResponseEntity.ok("Success");
+    }
+
 }
